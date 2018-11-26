@@ -67,8 +67,9 @@ def plot_linear_transformation(matrix):
     # draw basis vectors
     origin = numpy.zeros(2)
     identity = numpy.identity(2)
-    axis1.quiver(origin, origin, identity[:,0], identity[:,1], angles='xy', scale_units='xy', scale=1)
-    axis2.quiver(origin, origin, matrix[:,0], matrix[:,1], angles='xy', scale_units='xy', scale=1)
+    color = (xcolor, ycolor)
+    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=color, angles='xy', scale_units='xy', scale=1)
+    axis2.quiver(origin, origin, matrix[0,:], matrix[1,:], color=color, angles='xy', scale_units='xy', scale=1)
     
     # show x-y axis in the center, hide frames, set xlimit & ylimit
     limit = 4
@@ -113,9 +114,10 @@ def plot_linear_transformations(matrix1, matrix2):
     # draw basis vectors
     origin = numpy.zeros(2)
     identity = numpy.identity(2)
-    axis1.quiver(origin, origin, identity[:,0], identity[:,1], angles='xy', scale_units='xy', scale=1)
-    axis2.quiver(origin, origin, matrix1[:,0], matrix1[:,1], angles='xy', scale_units='xy', scale=1)
-    axis3.quiver(origin, origin, matrix2@matrix1[:,0], matrix2@matrix1[:,1], angles='xy', scale_units='xy', scale=1)
+    color = (xcolor, ycolor)
+    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=color, angles='xy', scale_units='xy', scale=1)
+    axis2.quiver(origin, origin, matrix1[0,:], matrix1[1,:], color=color, angles='xy', scale_units='xy', scale=1)
+    axis3.quiver(origin, origin, (matrix2@matrix1)[0,:], (matrix2@matrix1)[1,:], color=color, angles='xy', scale_units='xy', scale=1)
     
     # show x-y axis in the center, hide frames, set xlimit & ylimit
     limit = 4
