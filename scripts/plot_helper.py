@@ -1,5 +1,6 @@
 import numpy
 from matplotlib import pyplot
+from mpl_toolkits.mplot3d import Axes3D
 
 def plot_vector(vectors, tails=None):
     ''' draw 2d vectors based on the values of vectors and the position of theirs tails
@@ -131,6 +132,43 @@ def plot_linear_transformations(matrix1, matrix2):
     axis1.set_title('before transformation')
     axis2.set_title('after 1 transformation')
     axis3.set_title('after 2 transformations')
+
+def plot_3d_linear_transformation(matrix):
+    """ create line plot to visualize the linear transformation represented by the input matrix
+    matrix: (3,3) ndarray
+    """
+    assert matrix.shape == (3,3), "the input matrix must have a shape of (3,3)"
+
+    grid_range = 2
+    x = numpy.arange(-grid_range, grid_range+1)
+    X, Y, Z = numpy.meshgrid(x,x,x)
+    X_new = matrix[0,0]*X + matrix[0,1]*Y + matrix[0,2]*Z
+    Y_new = matrix[1,0]*X + matrix[1,1]*Y + matrix[1,2]*Z
+    Z_new = matrix[2,0]*X + matrix[2,1]*Y + matrix[2,2]*Z
+
+    figure = pyplot.figure(figsize=(8,4))
+    axis1 = figure.add_subplot(1, 2, 1, projection='3d')
+    axis2 = figure.add_subplot(1, 2, 2, projection='3d')
+
+    # draw grid lines
+    xcolor, ycolor, zcolor = '#0084b6', '#d8a322', '#FF3333'
+    linewidth = 1
+    for i in range(x.size):
+        for j in range(x.size):
+            axis1.plot(X[:,i,j], Y[:,i,j], Z[:,i,j], color=xcolor, linewidth=linewidth)
+            axis1.plot(X[i,:,j], Y[i,:,j], Z[i,:,j], color=ycolor, linewidth=linewidth)
+            axis1.plot(X[i,j,:], Y[i,j,:], Z[i,j,:], color=zcolor, linewidth=linewidth)
+            axis2.plot(X_new[:,i,j], Y_new[:,i,j], Z_new[:,i,j], color=xcolor, linewidth=linewidth)
+            axis2.plot(X_new[i,:,j], Y_new[i,:,j], Z_new[i,:,j], color=ycolor, linewidth=linewidth)
+            axis2.plot(X_new[i,j,:], Y_new[i,j,:], Z_new[i,j,:], color=zcolor, linewidth=linewidth)
+
+    # show x-y axis in the center, hide frames, set xlimit & ylimit
+    limit = 2 * 1.20
+    axis1.set_xlim([-limit, limit])
+    axis1.set_ylim([-limit, limit])
+    axis1.set_zlim([-limit, limit])
+    axis1.set_title('before transformation')
+    axis2.set_title('after transformation')
 
 if __name__ == "__main__":
     pass
