@@ -52,8 +52,8 @@ def plot_linear_transformation(matrix):
     grid_range = 20
     x = numpy.arange(-grid_range, grid_range+1)
     X, Y = numpy.meshgrid(x,x) 
-    new_X = matrix[0,0]*X + matrix[0,1]*Y
-    new_Y = matrix[1,0]*X + matrix[1,1]*Y
+    X_new = matrix[0,0]*X + matrix[0,1]*Y
+    Y_new = matrix[1,0]*X + matrix[1,1]*Y
     
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(6,3))
     
@@ -61,9 +61,9 @@ def plot_linear_transformation(matrix):
     xcolor, ycolor = '#CAB18C', '#005481'
     for i in range(x.size):
         axis1.plot(X[i,:], Y[i,:], c=xcolor, linewidth=1)
-        axis2.plot(new_X[i,:], new_Y[i,:], color=xcolor, linewidth=1)
+        axis2.plot(X_new[i,:], Y_new[i,:], color=xcolor, linewidth=1)
         axis1.plot(X[:,i], Y[:,i], c=ycolor, linewidth=1)
-        axis2.plot(new_X[:,i], new_Y[:,i], color=ycolor, linewidth=1)
+        axis2.plot(X_new[:,i], Y_new[:,i], color=ycolor, linewidth=1)
     
     # draw basis vectors
     origin = numpy.zeros(2)
@@ -95,10 +95,10 @@ def plot_linear_transformations(matrix1, matrix2):
     grid_range = 20
     x = numpy.arange(-grid_range, grid_range+1)
     X, Y = numpy.meshgrid(x,x) 
-    new1_X = matrix1[0,0]*X + matrix1[0,1]*Y
-    new1_Y = matrix1[1,0]*X + matrix1[1,1]*Y
-    new2_X = matrix2[0,0]*new1_X + matrix2[0,1]*new1_Y
-    new2_Y = matrix2[1,0]*new1_X + matrix2[1,1]*new1_Y
+    X_new1 = matrix1[0,0]*X + matrix1[0,1]*Y
+    Y_new1 = matrix1[1,0]*X + matrix1[1,1]*Y
+    X_new2 = matrix2[0,0]*X_new1 + matrix2[0,1]*Y_new1
+    Y_new2 = matrix2[1,0]*X_new1 + matrix2[1,1]*Y_new1
     
     figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=(9,3))
     
@@ -106,11 +106,11 @@ def plot_linear_transformations(matrix1, matrix2):
     xcolor, ycolor = '#CAB18C', '#005481'
     for i in range(x.size):
         axis1.plot(X[i,:], Y[i,:], c=xcolor, linewidth=1)
-        axis2.plot(new1_X[i,:], new1_Y[i,:], color=xcolor, linewidth=1)
-        axis3.plot(new2_X[i,:], new2_Y[i,:], color=xcolor, linewidth=1)
+        axis2.plot(X_new1[i,:], Y_new1[i,:], color=xcolor, linewidth=1)
+        axis3.plot(X_new2[i,:], Y_new2[i,:], color=xcolor, linewidth=1)
         axis1.plot(X[:,i], Y[:,i], c=ycolor, linewidth=1)
-        axis2.plot(new1_X[:,i], new1_Y[:,i], color=ycolor, linewidth=1)
-        axis3.plot(new2_X[:,i], new2_Y[:,i], color=ycolor, linewidth=1)
+        axis2.plot(X_new1[:,i], Y_new1[:,i], color=ycolor, linewidth=1)
+        axis3.plot(X_new2[:,i], Y_new2[:,i], color=ycolor, linewidth=1)
     
     # draw basis vectors
     origin = numpy.zeros(2)
