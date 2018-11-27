@@ -43,9 +43,10 @@ def plot_vector(vectors, tails=None):
     axis.spines['right'].set_color('none')
     axis.spines['top'].set_color('none')
 
-def plot_linear_transformation(matrix):
+def plot_linear_transformation(matrix, *vectors):
     """ create line plot and quiver plot to visualize the linear transformation represented by the input matrix
     matrix: (2,2) ndarray
+    vectors: optional, other input vectors to visualize
     """
     assert matrix.shape == (2,2), "the input matrix must have a shape of (2,2)"
     
@@ -72,6 +73,15 @@ def plot_linear_transformation(matrix):
     axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=color, angles='xy', scale_units='xy', scale=1)
     axis2.quiver(origin, origin, matrix[0,:], matrix[1,:], color=color, angles='xy', scale_units='xy', scale=1)
     
+    # draw optional vectors
+    if vectors:
+        red = '#FF3333'
+        origin = numpy.zeros(1)
+        for vector in vectors:
+            axis1.quiver(origin, origin, [vector[0]], [vector[1]], color=red, angles='xy', scale_units='xy', scale=1)
+            vector_new = matrix@vector.reshape(-1,1)
+            axis2.quiver(origin, origin, [vector_new[0]], [vector_new[1]], color=red, angles='xy', scale_units='xy', scale=1)
+
     # show x-y axis in the center, hide frames, set xlimit & ylimit
     limit = 4
     for axis in (axis1, axis2):     
