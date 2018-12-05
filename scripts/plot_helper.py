@@ -1,6 +1,7 @@
 import numpy
 from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
+from itertools import cycle
 
 def plot_vector(vectors, tails=None):
     ''' draw 2d vectors based on the values of vectors and the position of theirs tails
@@ -57,7 +58,7 @@ def plot_linear_transformation(matrix, *vectors):
     Y_new = matrix[1,0]*X + matrix[1,1]*Y
     
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(6,3))
-    
+
     # draw grid lines
     xcolor, ycolor = '#CAB18C', '#005481'
     for i in range(x.size):
@@ -74,13 +75,15 @@ def plot_linear_transformation(matrix, *vectors):
     axis2.quiver(origin, origin, matrix[0,:], matrix[1,:], color=color, angles='xy', scale_units='xy', scale=1)
     
     # draw optional vectors
+    red, green, orange, purple, brown = '#ff3333', '#559242', '#ffa500', '#a35cff', '#731d1d'
+    color_cycle = cycle([red, green, orange, purple, brown])
     if vectors:
-        red = '#FF3333'
         origin = numpy.zeros(1)
         for vector in vectors:
-            axis1.quiver(origin, origin, [vector[0]], [vector[1]], color=red, angles='xy', scale_units='xy', scale=1)
+            color = next(color_cycle)
+            axis1.quiver(origin, origin, [vector[0]], [vector[1]], color=color, angles='xy', scale_units='xy', scale=1)
             vector_new = matrix@vector.reshape(-1,1)
-            axis2.quiver(origin, origin, [vector_new[0]], [vector_new[1]], color=red, angles='xy', scale_units='xy', scale=1)
+            axis2.quiver(origin, origin, [vector_new[0]], [vector_new[1]], color=color, angles='xy', scale_units='xy', scale=1)
 
     # show x-y axis in the center, hide frames, set xlimit & ylimit
     limit = 4
