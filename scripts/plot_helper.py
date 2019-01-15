@@ -1,7 +1,15 @@
 import numpy
+from numpy.linalg import inv
+from math import ceil
 from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
+
+grey = '#808080'
+gold = '#cab18c'
+blue = '#005481'
+red = '#ff3333'
+origin = numpy.zeros(1)
 
 def plot_vector(vectors, tails=None):
     ''' draw 2d vectors based on the values of vectors and the position of theirs tails
@@ -116,7 +124,7 @@ def plot_linear_transformations(matrix1, matrix2):
     figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=(9,3))
     
     # draw grid lines
-    xcolor, ycolor = '#CAB18C', '#005481'
+    xcolor, ycolor = gold, blue
     for i in range(x.size):
         axis1.plot(X[i,:], Y[i,:], c=xcolor, linewidth=1)
         axis2.plot(X_new1[i,:], Y_new1[i,:], color=xcolor, linewidth=1)
@@ -182,6 +190,61 @@ def plot_3d_linear_transformation(matrix):
     axis1.set_zlim([-limit, limit])
     axis1.set_title('before transformation')
     axis2.set_title('after transformation')
+
+def plot_basis(axis, I, J, vector=None, title=None):
+    """ Plot the new coordinate system determined by the basis I,J.
+    axis: 
+    I, J: (2, ) numpy array
+    vector: vector's coordinates on new basis
+    """
+    grid_range = 20
+    x = numpy.arange(-grid_range, grid_range+1)
+    X_, Y_ = numpy.meshgrid(x,x)   # grid coordinates on the new basis
+    X = I[0]*X_ + J[0]*Y_   # grid coordinates on the standard basis
+    Y = I[1]*X_ + J[1]*Y_
+    
+    # draw origin
+    axis.scatter(origin, origin, c='black', s=6)
+
+    # draw grid lines of the new coordinate system
+    lw_grid = 0.4
+    for i in range(x.size):
+        axis.plot(X[i,:], Y[i,:], c=grey, lw=lw_grid)
+        axis.plot(X[:,i], Y[:,i], c=grey, lw=lw_grid)
+    
+    # highlight new axes (spines)
+    lw_spine = 0.5
+    zero_id = numpy.where(x==0)[0][0]
+    axis.plot(X[zero_id,:], Y[zero_id,:], c=gold, lw=lw_spine)
+    axis.plot(X[:,zero_id], Y[:,zero_id], c=blue, lw=lw_spine)
+
+    # draw basis vectors using quiver plot
+    axis.quiver(origin, origin, [I[0]], [I[1]], color=gold, angles='xy', scale_units='xy', scale=1)
+    axis.quiver(origin, origin, [J[0]], [J[1]], color=blue, angles='xy', scale_units='xy', scale=1)
+
+    # draw input vector on new coordinate system
+    bound = 5
+    if vector is not None:
+        M = numpy.transpose(numpy.vstack((I,J)))
+        vector = M @ vector.reshape(-1,1)
+        axis.quiver(origin, origin, [vector[0]], [vector[1]], color=red, angles='xy', scale_units='xy', scale=1)
+        bound = max(ceil(numpy.max(numpy.abs(vector))), bound)
+    
+    # hide frames, set xlimit & ylimit, set title
+    axis.set_xlim([-bound, bound])
+    axis.set_ylim([-bound, bound])
+    axis.axis('off')
+    if title is not None:
+        axis.set_title(title)
+
+def plot_change_basis(I, J, vector):
+    """ Create a side-by-side plot of the vector both on the standard basis and on the new basis
+    """
+    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(8,4))
+    M = numpy.transpose(numpy.vstack((I,J)))
+    vector_ = inv(M) @ vector.reshape(-1, 1)
+    plot_basis(axis1, numpy.array([1,0]), numpy.array([0,1]), vector=vector, title='standard basis')
+    plot_basis(axis2, I, J, vector=vector_, title='new basis')
 
 if __name__ == "__main__":
     pass
