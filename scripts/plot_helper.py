@@ -191,7 +191,7 @@ def plot_3d_linear_transformation(matrix):
     axis1.set_title('before transformation')
     axis2.set_title('after transformation')
 
-def plot_basis(axis, I, J, vector=None, title=None):
+def plot_basis_helper(axis, I, J, vector=None, title=None):
     """ Plot the new coordinate system determined by the basis I,J.
     axis: 
     I, J: (2, ) numpy array
@@ -237,14 +237,27 @@ def plot_basis(axis, I, J, vector=None, title=None):
     if title is not None:
         axis.set_title(title)
 
+    # add text next to new basis vectors
+    text_params = {'ha': 'center', 'va': 'center', 'size' : 13}
+    axis.text((I[0]-J[0])/2, (I[1]-J[1])/2, '$i$', color=gold, **text_params)
+    axis.text((J[0]-I[0])/2, (J[1]-I[1])/2, '$j$', color=blue, **text_params)
+    if vector is not None:
+        axis.text(vector[0]*1.1, vector[1]*1.1, '$v$', color=red, **text_params)
+
+def plot_basis(I, J, vector):
+    """ Plot the vector on the basis defined by I and J
+    """
+    figure, axis = pyplot.subplots(figsize=(4,4))
+    plot_basis_helper(axis, I, J, vector=vector)
+
 def plot_change_basis(I, J, vector):
     """ Create a side-by-side plot of the vector both on the standard basis and on the new basis
     """
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(8,4))
     M = numpy.transpose(numpy.vstack((I,J)))
     vector_ = inv(M) @ vector.reshape(-1, 1)
-    plot_basis(axis1, numpy.array([1,0]), numpy.array([0,1]), vector=vector, title='standard basis')
-    plot_basis(axis2, I, J, vector=vector_, title='new basis')
+    plot_basis_helper(axis1, numpy.array([1,0]), numpy.array([0,1]), vector=vector, title='standard basis')
+    plot_basis_helper(axis2, I, J, vector=vector_, title='new basis')
 
 if __name__ == "__main__":
     pass
