@@ -5,10 +5,14 @@ from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
 
+pyplot.rc('font', family='serif', size='12')
+
 grey = '#808080'
 gold = '#cab18c'
 blue = '#005481'
 red = '#ff3333'
+newblue = '#004065'
+lightblue = '#0096d6'
 origin = numpy.zeros(1)
 
 def plot_vector(vectors, tails=None):
@@ -40,7 +44,7 @@ def plot_vector(vectors, tails=None):
     limit = numpy.ceil(limit * 1.2)   # add some margins
     
     figure, axis = pyplot.subplots(figsize=(4,4))
-    axis.quiver(tails[:,0], tails[:,1], vectors[:,0], vectors[:,1], angles='xy', scale_units='xy', scale=1)
+    axis.quiver(tails[:,0], tails[:,1], vectors[:,0], vectors[:,1], color=newblue, angles='xy', scale_units='xy', scale=1)
     axis.set_xlim([-limit, limit])
     axis.set_ylim([-limit, limit])
     axis.set_aspect('equal')
@@ -68,7 +72,7 @@ def plot_linear_transformation(matrix, *vectors):
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(6,3))
 
     # draw grid lines
-    xcolor, ycolor = '#CAB18C', '#005481'
+    xcolor, ycolor = '#CAB18C', lightblue
     for i in range(x.size):
         axis1.plot(X[i,:], Y[i,:], c=xcolor, linewidth=1)
         axis2.plot(X_new[i,:], Y_new[i,:], color=xcolor, linewidth=1)
@@ -79,8 +83,8 @@ def plot_linear_transformation(matrix, *vectors):
     origin = numpy.zeros(2)
     identity = numpy.identity(2)
     color = (xcolor, ycolor)
-    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=color, angles='xy', scale_units='xy', scale=1)
-    axis2.quiver(origin, origin, matrix[0,:], matrix[1,:], color=color, angles='xy', scale_units='xy', scale=1)
+    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=newblue, angles='xy', scale_units='xy', scale=1)
+    axis2.quiver(origin, origin, matrix[0,:], matrix[1,:], color=newblue, angles='xy', scale_units='xy', scale=1)
     
     # draw optional vectors
     red, green, orange, purple, brown = '#ff3333', '#559242', '#ffa500', '#a35cff', '#731d1d'
@@ -102,8 +106,8 @@ def plot_linear_transformation(matrix, *vectors):
         axis.spines['top'].set_color('none')
         axis.set_xlim([-limit, limit])
         axis.set_ylim([-limit, limit])
-    axis1.set_title('before transformation')
-    axis2.set_title('after transformation')
+    axis1.set_title('Before transformation')
+    axis2.set_title('After transformation')
 
 def plot_linear_transformations(matrix1, matrix2):
     """ create line plot and quiver plot to visualize the linear transformations represented by the input matrices
@@ -150,9 +154,9 @@ def plot_linear_transformations(matrix1, matrix2):
         axis.spines['top'].set_color('none')
         axis.set_xlim([-limit, limit])
         axis.set_ylim([-limit, limit])
-    axis1.set_title('before transformation')
-    axis2.set_title('after 1 transformation')
-    axis3.set_title('after 2 transformations')
+    axis1.set_title('Before transformation')
+    axis2.set_title('After 1 transformation')
+    axis3.set_title('After 2 transformations')
 
 def plot_3d_linear_transformation(matrix):
     """ create line plot to visualize the linear transformation represented by the input matrix
