@@ -5,3 +5,4 @@
 .nbgrader.log
 .DS_Store
 *.pyc
+*.pyc
