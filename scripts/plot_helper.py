@@ -43,8 +43,9 @@ def plot_vector(vectors, tails=None):
     limit = numpy.max(numpy.abs(numpy.hstack((tails, heads))))
     limit = numpy.ceil(limit * 1.2)   # add some margins
     
-    figure, axis = pyplot.subplots(figsize=(4,4))
-    axis.quiver(tails[:,0], tails[:,1], vectors[:,0], vectors[:,1], color=newblue, angles='xy', scale_units='xy', scale=1)
+    figure, axis = pyplot.subplots(figsize=(6,6))
+    axis.quiver(tails[:,0], tails[:,1], vectors[:,0], vectors[:,1], color=newblue, 
+                  angles='xy', scale_units='xy', scale=1)
     axis.set_xlim([-limit, limit])
     axis.set_ylim([-limit, limit])
     axis.set_aspect('equal')
@@ -69,7 +70,7 @@ def plot_linear_transformation(matrix, *vectors):
     X_new = matrix[0,0]*X + matrix[0,1]*Y
     Y_new = matrix[1,0]*X + matrix[1,1]*Y
     
-    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(6,3))
+    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(10,5))
 
     # draw grid lines
     xcolor, ycolor = '#CAB18C', lightblue
@@ -125,17 +126,17 @@ def plot_linear_transformations(matrix1, matrix2):
     X_new2 = matrix2[0,0]*X_new1 + matrix2[0,1]*Y_new1
     Y_new2 = matrix2[1,0]*X_new1 + matrix2[1,1]*Y_new1
     
-    figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=(9,3))
+    figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=(12,4))
     
     # draw grid lines
     xcolor, ycolor = gold, blue
     for i in range(x.size):
         axis1.plot(X[i,:], Y[i,:], c=xcolor, linewidth=1)
-        axis2.plot(X_new1[i,:], Y_new1[i,:], color=xcolor, linewidth=1)
-        axis3.plot(X_new2[i,:], Y_new2[i,:], color=xcolor, linewidth=1)
+        axis2.plot(X_new1[i,:], Y_new1[i,:], color=xcolor, linewidth=1, alpha=0.8)
+        axis3.plot(X_new2[i,:], Y_new2[i,:], color=xcolor, linewidth=1, alpha=0.8)
         axis1.plot(X[:,i], Y[:,i], c=ycolor, linewidth=1)
-        axis2.plot(X_new1[:,i], Y_new1[:,i], color=ycolor, linewidth=1)
-        axis3.plot(X_new2[:,i], Y_new2[:,i], color=ycolor, linewidth=1)
+        axis2.plot(X_new1[:,i], Y_new1[:,i], color=ycolor, linewidth=1, alpha=0.8)
+        axis3.plot(X_new2[:,i], Y_new2[:,i], color=ycolor, linewidth=1, alpha=0.8)
     
     # draw basis vectors
     origin = numpy.zeros(2)
