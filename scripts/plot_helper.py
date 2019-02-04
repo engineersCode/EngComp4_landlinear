@@ -5,15 +5,23 @@ from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
 
-pyplot.rc('font', family='serif', size='12')
+pyplot.rc('font', family='serif', size='6')
+pyplot.rc('figure', dpi=200)
 
 grey = '#808080'
-gold = '#cab18c'
-blue = '#005481'
-red = '#ff3333'
-newblue = '#004065'
-lightblue = '#0096d6'
-origin = numpy.zeros(1)
+gold = '#cab18c'   # x-axis grid
+lightblue = '#0096d6'  # y-axis grid
+green = '#008367'  # x-axis basis vector
+red = '#E31937'    # y-axis basis vector
+darkblue = '#004065'
+
+quiver_params = {'angles': 'xy',
+                 'scale_units': 'xy',
+                 'scale': 1,
+                 'width': 0.012}
+
+grid_params = {'linewidth': 0.5,
+               'alpha': 0.8}
 
 def plot_vector(vectors, tails=None):
     ''' draw 2d vectors based on the values of vectors and the position of theirs tails
@@ -43,8 +51,8 @@ def plot_vector(vectors, tails=None):
     limit = numpy.max(numpy.abs(numpy.hstack((tails, heads))))
     limit = numpy.ceil(limit * 1.2)   # add some margins
     
-    figure, axis = pyplot.subplots(figsize=(6,6))
-    axis.quiver(tails[:,0], tails[:,1], vectors[:,0], vectors[:,1], color=newblue, 
+    figure, axis = pyplot.subplots(figsize=(2,2))
+    axis.quiver(tails[:,0], tails[:,1], vectors[:,0], vectors[:,1], color=darkblue, 
                   angles='xy', scale_units='xy', scale=1)
     axis.set_xlim([-limit, limit])
     axis.set_ylim([-limit, limit])
@@ -70,25 +78,26 @@ def plot_linear_transformation(matrix, *vectors):
     X_new = matrix[0,0]*X + matrix[0,1]*Y
     Y_new = matrix[1,0]*X + matrix[1,1]*Y
     
-    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(10,5))
+    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(4,2))
 
     # draw grid lines
-    xcolor, ycolor = '#CAB18C', lightblue
+    xcolor, ycolor = gold, lightblue
     for i in range(x.size):
-        axis1.plot(X[i,:], Y[i,:], c=xcolor, linewidth=1)
-        axis2.plot(X_new[i,:], Y_new[i,:], color=xcolor, linewidth=1)
-        axis1.plot(X[:,i], Y[:,i], c=ycolor, linewidth=1)
-        axis2.plot(X_new[:,i], Y_new[:,i], color=ycolor, linewidth=1)
+        axis1.plot(X[i,:], Y[i,:], c=xcolor, **grid_params)
+        axis2.plot(X_new[i,:], Y_new[i,:], c=xcolor, **grid_params)
+        axis1.plot(X[:,i], Y[:,i], c=ycolor, **grid_params)
+        axis2.plot(X_new[:,i], Y_new[:,i], c=ycolor, **grid_params)
     
     # draw basis vectors
     origin = numpy.zeros(2)
     identity = numpy.identity(2)
-    color = (xcolor, ycolor)
-    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=newblue, angles='xy', scale_units='xy', scale=1)
-    axis2.quiver(origin, origin, matrix[0,:], matrix[1,:], color=newblue, angles='xy', scale_units='xy', scale=1)
+    color = (green, red)
+    width = 0.012   # linewidth of quiver plots
+    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=color, **quiver_params)
+    axis2.quiver(origin, origin, matrix[0,:], matrix[1,:], color=color, **quiver_params)
     
     # draw optional vectors
-    red, green, orange, purple, brown = '#ff3333', '#559242', '#ffa500', '#a35cff', '#731d1d'
+    orange, purple, brown = '#ffa500', '#a35cff', '#731d1d'
     color_cycle = cycle([red, green, orange, purple, brown])
     if vectors:
         origin = numpy.zeros(1)
@@ -103,6 +112,8 @@ def plot_linear_transformation(matrix, *vectors):
     for axis in (axis1, axis2):     
         axis.spines['left'].set_position('center')
         axis.spines['bottom'].set_position('center')
+        axis.spines['left'].set_linewidth(0.3)
+        axis.spines['bottom'].set_linewidth(0.3)
         axis.spines['right'].set_color('none')
         axis.spines['top'].set_color('none')
         axis.set_xlim([-limit, limit])
@@ -126,31 +137,34 @@ def plot_linear_transformations(matrix1, matrix2):
     X_new2 = matrix2[0,0]*X_new1 + matrix2[0,1]*Y_new1
     Y_new2 = matrix2[1,0]*X_new1 + matrix2[1,1]*Y_new1
     
-    figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=(12,4))
+    figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=(6,2))
     
     # draw grid lines
-    xcolor, ycolor = gold, blue
+    xcolor, ycolor = gold, lightblue
     for i in range(x.size):
-        axis1.plot(X[i,:], Y[i,:], c=xcolor, linewidth=1)
-        axis2.plot(X_new1[i,:], Y_new1[i,:], color=xcolor, linewidth=1, alpha=0.8)
-        axis3.plot(X_new2[i,:], Y_new2[i,:], color=xcolor, linewidth=1, alpha=0.8)
-        axis1.plot(X[:,i], Y[:,i], c=ycolor, linewidth=1)
-        axis2.plot(X_new1[:,i], Y_new1[:,i], color=ycolor, linewidth=1, alpha=0.8)
-        axis3.plot(X_new2[:,i], Y_new2[:,i], color=ycolor, linewidth=1, alpha=0.8)
+        axis1.plot(X[i,:], Y[i,:], c=xcolor, **grid_params)
+        axis2.plot(X_new1[i,:], Y_new1[i,:], c=xcolor, **grid_params)
+        axis3.plot(X_new2[i,:], Y_new2[i,:], c=xcolor, **grid_params)
+        axis1.plot(X[:,i], Y[:,i], c=ycolor, **grid_params)
+        axis2.plot(X_new1[:,i], Y_new1[:,i], c=ycolor, **grid_params)
+        axis3.plot(X_new2[:,i], Y_new2[:,i], c=ycolor, **grid_params)
     
     # draw basis vectors
     origin = numpy.zeros(2)
     identity = numpy.identity(2)
-    color = (xcolor, ycolor)
-    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=color, angles='xy', scale_units='xy', scale=1)
-    axis2.quiver(origin, origin, matrix1[0,:], matrix1[1,:], color=color, angles='xy', scale_units='xy', scale=1)
-    axis3.quiver(origin, origin, (matrix2@matrix1)[0,:], (matrix2@matrix1)[1,:], color=color, angles='xy', scale_units='xy', scale=1)
+    color = (green, red)
+    width = 0.012   # linewidth of quiver plots
+    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=color, **quiver_params)
+    axis2.quiver(origin, origin, matrix1[0,:], matrix1[1,:], color=color, **quiver_params)
+    axis3.quiver(origin, origin, (matrix2@matrix1)[0,:], (matrix2@matrix1)[1,:], color=color, **quiver_params)
     
     # show x-y axis in the center, hide frames, set xlimit & ylimit
     limit = 4
     for axis in (axis1, axis2, axis3):     
         axis.spines['left'].set_position('center')
         axis.spines['bottom'].set_position('center')
+        axis.spines['left'].set_linewidth(0.3)
+        axis.spines['bottom'].set_linewidth(0.3)
         axis.spines['right'].set_color('none')
         axis.spines['top'].set_color('none')
         axis.set_xlim([-limit, limit])
@@ -209,6 +223,7 @@ def plot_basis_helper(axis, I, J, vector=None, title=None):
     Y = I[1]*X_ + J[1]*Y_
     
     # draw origin
+    origin = numpy.zeros(1)
     axis.scatter(origin, origin, c='black', s=6)
 
     # draw grid lines of the new coordinate system
@@ -221,11 +236,11 @@ def plot_basis_helper(axis, I, J, vector=None, title=None):
     lw_spine = 0.5
     zero_id = numpy.where(x==0)[0][0]
     axis.plot(X[zero_id,:], Y[zero_id,:], c=gold, lw=lw_spine)
-    axis.plot(X[:,zero_id], Y[:,zero_id], c=blue, lw=lw_spine)
+    axis.plot(X[:,zero_id], Y[:,zero_id], c=lightblue, lw=lw_spine)
 
     # draw basis vectors using quiver plot
     axis.quiver(origin, origin, [I[0]], [I[1]], color=gold, angles='xy', scale_units='xy', scale=1)
-    axis.quiver(origin, origin, [J[0]], [J[1]], color=blue, angles='xy', scale_units='xy', scale=1)
+    axis.quiver(origin, origin, [J[0]], [J[1]], color=lightblue, angles='xy', scale_units='xy', scale=1)
 
     # draw input vector on new coordinate system
     bound = 5
@@ -245,7 +260,7 @@ def plot_basis_helper(axis, I, J, vector=None, title=None):
     # add text next to new basis vectors
     text_params = {'ha': 'center', 'va': 'center', 'size' : 13}
     axis.text((I[0]-J[0])/2, (I[1]-J[1])/2, '$i$', color=gold, **text_params)
-    axis.text((J[0]-I[0])/2, (J[1]-I[1])/2, '$j$', color=blue, **text_params)
+    axis.text((J[0]-I[0])/2, (J[1]-I[1])/2, '$j$', color=lightblue, **text_params)
     if vector is not None:
         axis.text(vector[0]*1.1, vector[1]*1.1, '$v$', color=red, **text_params)
 
