@@ -4,3 +4,4 @@
 #Ignore nbgrader log
 .nbgrader.log
 .DS_Store
+*.pyc
