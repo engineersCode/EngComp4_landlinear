@@ -65,113 +65,58 @@ def plot_vector(vectors, tails=None):
     axis.spines['right'].set_color('none')
     axis.spines['top'].set_color('none')
 
-def plot_linear_transformation(matrix, *vectors):
-    """ create line plot and quiver plot to visualize the linear transformation represented by the input matrix
-    matrix: (2,2) ndarray
-    vectors: optional, other input vectors to visualize
+def plot_transformation_helper(axis, matrix, title=None):
+    """ Plot the linear transformation defined by matrix.
     """
     assert matrix.shape == (2,2), "the input matrix must have a shape of (2,2)"
-    
     grid_range = 20
     x = numpy.arange(-grid_range, grid_range+1)
-    X, Y = numpy.meshgrid(x,x) 
-    X_new = matrix[0,0]*X + matrix[0,1]*Y
-    Y_new = matrix[1,0]*X + matrix[1,1]*Y
+    X_, Y_ = numpy.meshgrid(x,x)
+    I = matrix[:,0]
+    J = matrix[:,1]
+    X = I[0]*X_ + J[0]*Y_
+    Y = I[1]*X_ + J[1]*Y_  
     
-    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(4,2))
-
     # draw grid lines
-    xcolor, ycolor = gold, lightblue
     for i in range(x.size):
-        axis1.plot(X[i,:], Y[i,:], c=xcolor, **grid_params)
-        axis2.plot(X_new[i,:], Y_new[i,:], c=xcolor, **grid_params)
-        axis1.plot(X[:,i], Y[:,i], c=ycolor, **grid_params)
-        axis2.plot(X_new[:,i], Y_new[:,i], c=ycolor, **grid_params)
+        axis.plot(X[i,:], Y[i,:], c=gold, **grid_params)
+        axis.plot(X[:,i], Y[:,i], c=lightblue, **grid_params)
     
     # draw basis vectors
-    origin = numpy.zeros(2)
-    identity = numpy.identity(2)
-    color = (green, red)
-    width = 0.012   # linewidth of quiver plots
-    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=color, **quiver_params)
-    axis2.quiver(origin, origin, matrix[0,:], matrix[1,:], color=color, **quiver_params)
-    
-    # draw optional vectors
-    orange, purple, brown = '#ffa500', '#a35cff', '#731d1d'
-    color_cycle = cycle([red, green, orange, purple, brown])
-    if vectors:
-        origin = numpy.zeros(1)
-        for vector in vectors:
-            color = next(color_cycle)
-            axis1.quiver(origin, origin, [vector[0]], [vector[1]], color=color, angles='xy', scale_units='xy', scale=1)
-            vector_new = matrix@vector.reshape(-1,1)
-            axis2.quiver(origin, origin, [vector_new[0]], [vector_new[1]], color=color, angles='xy', scale_units='xy', scale=1)
+    origin = numpy.zeros(1)
+    axis.quiver(origin, origin, [I[0]], [I[1]], color=green, **quiver_params)
+    axis.quiver(origin, origin, [J[0]], [J[1]], color=red, **quiver_params)
 
-    # show x-y axis in the center, hide frames, set xlimit & ylimit
+    # hide frames, set xlimit & ylimit, set title
     limit = 4
-    for axis in (axis1, axis2):     
-        axis.spines['left'].set_position('center')
-        axis.spines['bottom'].set_position('center')
-        axis.spines['left'].set_linewidth(0.3)
-        axis.spines['bottom'].set_linewidth(0.3)
-        axis.spines['right'].set_color('none')
-        axis.spines['top'].set_color('none')
-        axis.set_xlim([-limit, limit])
-        axis.set_ylim([-limit, limit])
-    axis1.set_title('Before transformation')
-    axis2.set_title('After transformation')
+    axis.spines['left'].set_position('center')
+    axis.spines['bottom'].set_position('center')
+    axis.spines['left'].set_linewidth(0.3)
+    axis.spines['bottom'].set_linewidth(0.3)
+    axis.spines['right'].set_color('none')
+    axis.spines['top'].set_color('none')
+    axis.set_xlim([-limit, limit])
+    axis.set_ylim([-limit, limit])
+    if title is not None:
+        axis.set_title(title)
+
+def plot_linear_transformation(matrix):
+    """ create line plot and quiver plot to visualize the linear transformation represented by the input matrix
+    matrix: (2,2) ndarray
+    """
+    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(4,2))
+    plot_transformation_helper(axis1, numpy.identity(2), title='Before transformation')
+    plot_transformation_helper(axis2, matrix, title='After transformation')
 
 def plot_linear_transformations(matrix1, matrix2):
     """ create line plot and quiver plot to visualize the linear transformations represented by the input matrices
     matrix1: (2,2) ndarray
     matrix2: (2,2) ndarray
     """
-    assert matrix1.shape == (2,2), "the first input matrix must have a shape of (2,2)"
-    assert matrix2.shape == (2,2), "the second input matrix must have a shape of (2,2)"
-    
-    grid_range = 20
-    x = numpy.arange(-grid_range, grid_range+1)
-    X, Y = numpy.meshgrid(x,x) 
-    X_new1 = matrix1[0,0]*X + matrix1[0,1]*Y
-    Y_new1 = matrix1[1,0]*X + matrix1[1,1]*Y
-    X_new2 = matrix2[0,0]*X_new1 + matrix2[0,1]*Y_new1
-    Y_new2 = matrix2[1,0]*X_new1 + matrix2[1,1]*Y_new1
-    
     figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=(6,2))
-    
-    # draw grid lines
-    xcolor, ycolor = gold, lightblue
-    for i in range(x.size):
-        axis1.plot(X[i,:], Y[i,:], c=xcolor, **grid_params)
-        axis2.plot(X_new1[i,:], Y_new1[i,:], c=xcolor, **grid_params)
-        axis3.plot(X_new2[i,:], Y_new2[i,:], c=xcolor, **grid_params)
-        axis1.plot(X[:,i], Y[:,i], c=ycolor, **grid_params)
-        axis2.plot(X_new1[:,i], Y_new1[:,i], c=ycolor, **grid_params)
-        axis3.plot(X_new2[:,i], Y_new2[:,i], c=ycolor, **grid_params)
-    
-    # draw basis vectors
-    origin = numpy.zeros(2)
-    identity = numpy.identity(2)
-    color = (green, red)
-    width = 0.012   # linewidth of quiver plots
-    axis1.quiver(origin, origin, identity[0,:], identity[1,:], color=color, **quiver_params)
-    axis2.quiver(origin, origin, matrix1[0,:], matrix1[1,:], color=color, **quiver_params)
-    axis3.quiver(origin, origin, (matrix2@matrix1)[0,:], (matrix2@matrix1)[1,:], color=color, **quiver_params)
-    
-    # show x-y axis in the center, hide frames, set xlimit & ylimit
-    limit = 4
-    for axis in (axis1, axis2, axis3):     
-        axis.spines['left'].set_position('center')
-        axis.spines['bottom'].set_position('center')
-        axis.spines['left'].set_linewidth(0.3)
-        axis.spines['bottom'].set_linewidth(0.3)
-        axis.spines['right'].set_color('none')
-        axis.spines['top'].set_color('none')
-        axis.set_xlim([-limit, limit])
-        axis.set_ylim([-limit, limit])
-    axis1.set_title('Before transformation')
-    axis2.set_title('After 1 transformation')
-    axis3.set_title('After 2 transformations')
+    plot_transformation_helper(axis1, numpy.identity(2), title='Before transformation')
+    plot_transformation_helper(axis2, matrix1, title='After 1 transformation')
+    plot_transformation_helper(axis3, matrix2@matrix1, title='After 2 transformations')
 
 def plot_3d_linear_transformation(matrix):
     """ create line plot to visualize the linear transformation represented by the input matrix
