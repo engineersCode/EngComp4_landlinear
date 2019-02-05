@@ -5,4 +5,4 @@
 .nbgrader.log
 .DS_Store
 *.pyc
-*.pyc
+__pycache__
