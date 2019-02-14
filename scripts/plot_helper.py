@@ -131,7 +131,7 @@ def plot_3d_linear_transformation(matrix):
     Y_new = matrix[1,0]*X + matrix[1,1]*Y + matrix[1,2]*Z
     Z_new = matrix[2,0]*X + matrix[2,1]*Y + matrix[2,2]*Z
 
-    figure = pyplot.figure(figsize=(8,4))
+    figure = pyplot.figure(figsize=(4,2))
     axis1 = figure.add_subplot(1, 2, 1, projection='3d')
     axis2 = figure.add_subplot(1, 2, 2, projection='3d')
 
