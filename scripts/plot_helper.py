@@ -15,6 +15,9 @@ green = '#008367'  # x-axis basis vector
 red = '#E31937'    # y-axis basis vector
 darkblue = '#004065'
 
+pink, yellow, orange, purple, brown = '#ef7b9d', '#fbd349', '#ffa500', '#a35cff', '#731d1d'
+
+
 quiver_params = {'angles': 'xy',
                  'scale_units': 'xy',
                  'scale': 1,
@@ -65,8 +68,11 @@ def plot_vector(vectors, tails=None):
     axis.spines['right'].set_color('none')
     axis.spines['top'].set_color('none')
 
-def plot_transformation_helper(axis, matrix, title=None):
+def plot_transformation_helper(axis, matrix, *vectors, title=None):
     """ Plot the linear transformation defined by matrix.
+    axis: axis to plot on
+    matrix: (2,2) ndarray
+    vectors: optional vectors to plot
     """
     assert matrix.shape == (2,2), "the input matrix must have a shape of (2,2)"
     grid_range = 20
@@ -87,6 +93,14 @@ def plot_transformation_helper(axis, matrix, title=None):
     axis.quiver(origin, origin, [I[0]], [I[1]], color=green, **quiver_params)
     axis.quiver(origin, origin, [J[0]], [J[1]], color=red, **quiver_params)
 
+    # draw optional vectors
+    color_cycle = cycle([pink, darkblue, orange, purple, brown])
+    if vectors:
+        for vector in vectors:
+            color = next(color_cycle)
+            vector_ = matrix @ vector.reshape(-1,1)
+            axis.quiver(origin, origin, [vector_[0]], [vector_[1]], color=color, **quiver_params)
+
     # hide frames, set xlimit & ylimit, set title
     limit = 4
     axis.spines['left'].set_position('center')
@@ -100,13 +114,14 @@ def plot_transformation_helper(axis, matrix, title=None):
     if title is not None:
         axis.set_title(title)
 
-def plot_linear_transformation(matrix):
+def plot_linear_transformation(matrix, *vectors):
     """ create line plot and quiver plot to visualize the linear transformation represented by the input matrix
     matrix: (2,2) ndarray
+    vectors: optional vectors to plot
     """
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(4,2))
-    plot_transformation_helper(axis1, numpy.identity(2), title='Before transformation')
-    plot_transformation_helper(axis2, matrix, title='After transformation')
+    plot_transformation_helper(axis1, numpy.identity(2), *vectors, title='Before transformation')
+    plot_transformation_helper(axis2, matrix, *vectors, title='After transformation')
 
 def plot_linear_transformations(matrix1, matrix2):
     """ create line plot and quiver plot to visualize the linear transformations represented by the input matrices
