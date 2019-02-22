@@ -4,8 +4,17 @@ from math import ceil
 from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
+import plot_config
 
-pyplot.rc('font', family='serif', size='6')
+# shrink figsize and fontsize when using %matplotlib notebook
+if plot_config.use_notebook:
+    fontsize = 4.5
+    fig_scale = 0.75
+else:
+    fontsize = 5.5
+    fig_scale = 1
+
+pyplot.rc('font', family='serif', size=str(fontsize))
 pyplot.rc('figure', dpi=200)
 
 grey = '#808080'
@@ -16,7 +25,6 @@ red = '#E31937'    # y-axis basis vector
 darkblue = '#004065'
 
 pink, yellow, orange, purple, brown = '#ef7b9d', '#fbd349', '#ffa500', '#a35cff', '#731d1d'
-
 
 quiver_params = {'angles': 'xy',
                  'scale_units': 'xy',
@@ -54,7 +62,8 @@ def plot_vector(vectors, tails=None):
     limit = numpy.max(numpy.abs(numpy.hstack((tails, heads))))
     limit = numpy.ceil(limit * 1.2)   # add some margins
     
-    figure, axis = pyplot.subplots(figsize=(2,2))
+    figsize = numpy.array([2,2]) * fig_scale
+    figure, axis = pyplot.subplots(figsize=figsize)
     axis.quiver(tails[:,0], tails[:,1], vectors[:,0], vectors[:,1], color=darkblue, 
                   angles='xy', scale_units='xy', scale=1)
     axis.set_xlim([-limit, limit])
@@ -119,7 +128,8 @@ def plot_linear_transformation(matrix, *vectors):
     matrix: (2,2) ndarray
     vectors: optional vectors to plot
     """
-    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(4,2))
+    figsize = numpy.array([4,2]) * fig_scale
+    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=figsize)
     plot_transformation_helper(axis1, numpy.identity(2), *vectors, title='Before transformation')
     plot_transformation_helper(axis2, matrix, *vectors, title='After transformation')
 
@@ -128,7 +138,8 @@ def plot_linear_transformations(matrix1, matrix2):
     matrix1: (2,2) ndarray
     matrix2: (2,2) ndarray
     """
-    figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=(6,2))
+    figsize = numpy.array([6,2]) * fig_scale * 0.75   # 0.75 is the extra compensation for 3 subplots
+    figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=figsize)
     plot_transformation_helper(axis1, numpy.identity(2), title='Before transformation')
     plot_transformation_helper(axis2, matrix1, title='After 1 transformation')
     plot_transformation_helper(axis3, matrix2@matrix1, title='After 2 transformations')
@@ -146,7 +157,8 @@ def plot_3d_linear_transformation(matrix):
     Y_new = matrix[1,0]*X + matrix[1,1]*Y + matrix[1,2]*Z
     Z_new = matrix[2,0]*X + matrix[2,1]*Y + matrix[2,2]*Z
 
-    figure = pyplot.figure(figsize=(4,2))
+    figsize = numpy.array([4,2]) * fig_scale
+    figure = pyplot.figure(figsize=figsize)
     axis1 = figure.add_subplot(1, 2, 1, projection='3d')
     axis2 = figure.add_subplot(1, 2, 2, projection='3d')
 
