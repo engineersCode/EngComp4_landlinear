@@ -10,6 +10,7 @@ What is a vector? The physicist's view versus the computer scientist's view. Fun
 
 #### Lesson 2:
 Matrix-vector multiplication as the left-hand side of a linear system of equation. Idea of solving for an unknown vector in a linear system is equivalent to finding the input vector given the transformation matrix its transformed vector (right-hand side vector). Visualize 3D linear transformations. What is rank of a matrix: the dimensionality of the space spanned by the transformed vectors. Visualize the transformations of rank-deficient matrices.
+Matrices in three-dimensional space: linear transformations in 3D; 3D systems of linear equations; dimension and rank.
 
 #### Lesson 3:
 Matrix-vector multiplication as a change of basis. A matrix converts a vector's coordinates from one coordinate system to another. Visualizing the same vector before and after applying the change of basis. An inverse of that matrix will change the vector's coordinates back to original basis. Differentiate the interpretation of linear transformation with the interpretation of changing basis: the former means a matrix transforms a vector to a new vector under the same basis, the latter means a matrix can express the same vector's coordinates in a new coordinate system (basis).
