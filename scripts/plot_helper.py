@@ -164,7 +164,7 @@ def plot_3d_linear_transformation(matrix):
 
     # draw grid lines
     xcolor, ycolor, zcolor = '#0084b6', '#d8a322', '#FF3333'
-    linewidth = 1
+    linewidth = 0.7
     for i in range(x.size):
         for j in range(x.size):
             axis1.plot(X[:,i,j], Y[:,i,j], Z[:,i,j], color=xcolor, linewidth=linewidth)
