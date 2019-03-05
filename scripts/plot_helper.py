@@ -1,5 +1,5 @@
 import numpy
-from numpy.linalg import inv
+from numpy.linalg import inv, eig
 from math import ceil
 from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
@@ -8,10 +8,10 @@ import plot_config
 
 # shrink figsize and fontsize when using %matplotlib notebook
 if plot_config.use_notebook:
-    fontsize = 4.5
+    fontsize = 4
     fig_scale = 0.75
 else:
-    fontsize = 5.5
+    fontsize = 5
     fig_scale = 1
 
 pyplot.rc('font', family='serif', size=str(fontsize))
@@ -182,7 +182,7 @@ def plot_3d_linear_transformation(matrix):
     axis1.set_title('before transformation')
     axis2.set_title('after transformation')
 
-def plot_basis_helper(axis, I, J, vector=None, title=None, I_label='i', J_label='j', vector_label='v'):
+def plot_basis_helper(axis, I, J, *vectors, title=None, I_label='i', J_label='j', vector_label='v'):
     """ Plot the new coordinate system determined by the basis I,J.
     axis: 
     I, J: (2, ) numpy array
@@ -216,11 +216,12 @@ def plot_basis_helper(axis, I, J, vector=None, title=None, I_label='i', J_label=
 
     # draw input vector on new coordinate system
     bound = 5
-    if vector is not None:
-        M = numpy.transpose(numpy.vstack((I,J)))
-        vector = M @ vector.reshape(-1,1)
-        axis.quiver(origin, origin, [vector[0]], [vector[1]], color=red, **quiver_params)
-        bound = max(ceil(numpy.max(numpy.abs(vector))), bound)
+    if vectors:
+        for vector in vectors:
+            M = numpy.transpose(numpy.vstack((I,J)))
+            vector = M @ vector.reshape(-1,1)
+            axis.quiver(origin, origin, [vector[0]], [vector[1]], color=red, **quiver_params)
+            bound = max(ceil(numpy.max(numpy.abs(vector))), bound)
     
     # hide frames, set xlimit & ylimit, set title
     axis.set_xlim([-bound, bound])
@@ -233,25 +234,48 @@ def plot_basis_helper(axis, I, J, vector=None, title=None, I_label='i', J_label=
     text_params = {'ha': 'center', 'va': 'center', 'size' : 6}
     axis.text((I[0]-J[0])/2*1.1, (I[1]-J[1])/2*1.1, r'${}$'.format(I_label), color=gold, **text_params)
     axis.text((J[0]-I[0])/2*1.1, (J[1]-I[1])/2*1.1, r'${}$'.format(J_label), color=lightblue, **text_params)
-    if vector is not None:
-        axis.text(vector[0]*1.1, vector[1]*1.1, r'${}$'.format(vector_label), color=red, **text_params)
+    #if vector is not None:
+    #    axis.text(vector[0]*1.1, vector[1]*1.1, r'${}$'.format(vector_label), color=red, **text_params)
 
-def plot_basis(I, J, vector):
-    """ Plot the vector on the basis defined by I and J
+def plot_basis(I, J, *vectors):
+    """ Plot vectors on the basis defined by I and J
     """
     figsize = numpy.array([2,2]) * fig_scale
     figure, axis = pyplot.subplots(figsize=figsize)
-    plot_basis_helper(axis, I, J, vector=vector)
+    plot_basis_helper(axis, I, J, *vectors)
 
-def plot_change_basis(I, J, vector):
+def plot_change_basis(I, J, *vectors):
     """ Create a side-by-side plot of the vector both on the standard basis and on the new basis
     """
     figsize = numpy.array([4,2]) * fig_scale
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=figsize)
     M = numpy.transpose(numpy.vstack((I,J)))
-    vector_ = inv(M) @ vector.reshape(-1, 1)
-    plot_basis_helper(axis1, numpy.array([1,0]), numpy.array([0,1]), vector=vector, title='standard basis')
-    plot_basis_helper(axis2, I, J, vector=vector_, title='new basis', I_label='a', J_label='b', vector_label='v')
+    M_inv = inv(M)
+    vectors_ = [ M_inv @ vector.reshape(-1, 1) for vector in vectors ]
+    plot_basis_helper(axis1, numpy.array([1,0]), numpy.array([0,1]), *vectors, title='standard basis')
+    plot_basis_helper(axis2, I, J, *vectors_, title='new basis', I_label='a', J_label='b', vector_label='v')
+
+def plot_eigen(matrix):
+    """ Visualize the eigendecomposition of the input matrix
+    """
+    figsize = numpy.array([4,4]) * fig_scale
+    figure, axes = pyplot.subplots(2, 2, figsize=figsize)
+    
+    eigenvalues, eigenvectors = eig(matrix)
+    c = eigenvectors
+    d = numpy.diag(eigenvalues)
+    c_inv = inv(c)
+    alpha =  numpy.linspace(0, 2*numpy.pi, 16)
+    scale = 2
+    vectors = scale * numpy.vstack((numpy.cos(alpha), numpy.sin(alpha)))  # vectors coord in standard basis
+    vectors_a = c_inv @ vectors  # vectors coord in new basis
+    vectors_b = d @ vectors_a    # transformed vectors coord in new basis
+    vectors_c = c @ vectors_b    # transformed vectors coord in standard basis
+
+    plot_basis_helper(axes[0,0], numpy.array([1,0]), numpy.array([0,1]), *(vectors.T), title=r'coords in standard basis $\mathbf{x}$')
+    plot_basis_helper(axes[0,1], c[:,0], c[:,1], *(vectors_a.T), title=r'change to new basis $C^{-1}\mathbf{x}$')
+    plot_basis_helper(axes[1,0], c[:,0], c[:,1], *(vectors_b.T), title=r'scale along new basis $DC^{-1}\mathbf{x}$')
+    plot_basis_helper(axes[1,1], numpy.array([1,0]), numpy.array([0,1]), *(vectors_c.T), title=r'change back to standard basis $CDC^{-1}\mathbf{x}$')
 
 if __name__ == "__main__":
     pass
