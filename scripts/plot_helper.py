@@ -69,7 +69,7 @@ def plot_vector(vectors, tails=None):
     axis.set_xlim([-limit, limit])
     axis.set_ylim([-limit, limit])
     axis.set_aspect('equal')
-    pyplot.grid(True)
+    axis.grid(True)
     
     # show x-y axis in the center, hide frames
     axis.spines['left'].set_position('center')
@@ -182,7 +182,7 @@ def plot_3d_linear_transformation(matrix):
     axis1.set_title('before transformation')
     axis2.set_title('after transformation')
 
-def plot_basis_helper(axis, I, J, vector=None, title=None):
+def plot_basis_helper(axis, I, J, vector=None, title=None, I_label='i', J_label='j', vector_label='v'):
     """ Plot the new coordinate system determined by the basis I,J.
     axis: 
     I, J: (2, ) numpy array
@@ -196,7 +196,7 @@ def plot_basis_helper(axis, I, J, vector=None, title=None):
     
     # draw origin
     origin = numpy.zeros(1)
-    axis.scatter(origin, origin, c='black', s=6)
+    axis.scatter(origin, origin, c='black', s=3)
 
     # draw grid lines of the new coordinate system
     lw_grid = 0.4
@@ -205,21 +205,21 @@ def plot_basis_helper(axis, I, J, vector=None, title=None):
         axis.plot(X[:,i], Y[:,i], c=grey, lw=lw_grid)
     
     # highlight new axes (spines)
-    lw_spine = 0.5
+    lw_spine = 0.7
     zero_id = numpy.where(x==0)[0][0]
     axis.plot(X[zero_id,:], Y[zero_id,:], c=gold, lw=lw_spine)
     axis.plot(X[:,zero_id], Y[:,zero_id], c=lightblue, lw=lw_spine)
 
     # draw basis vectors using quiver plot
-    axis.quiver(origin, origin, [I[0]], [I[1]], color=gold, angles='xy', scale_units='xy', scale=1)
-    axis.quiver(origin, origin, [J[0]], [J[1]], color=lightblue, angles='xy', scale_units='xy', scale=1)
+    axis.quiver(origin, origin, [I[0]], [I[1]], color=gold, **quiver_params)
+    axis.quiver(origin, origin, [J[0]], [J[1]], color=lightblue, **quiver_params)
 
     # draw input vector on new coordinate system
     bound = 5
     if vector is not None:
         M = numpy.transpose(numpy.vstack((I,J)))
         vector = M @ vector.reshape(-1,1)
-        axis.quiver(origin, origin, [vector[0]], [vector[1]], color=red, angles='xy', scale_units='xy', scale=1)
+        axis.quiver(origin, origin, [vector[0]], [vector[1]], color=red, **quiver_params)
         bound = max(ceil(numpy.max(numpy.abs(vector))), bound)
     
     # hide frames, set xlimit & ylimit, set title
@@ -230,26 +230,28 @@ def plot_basis_helper(axis, I, J, vector=None, title=None):
         axis.set_title(title)
 
     # add text next to new basis vectors
-    text_params = {'ha': 'center', 'va': 'center', 'size' : 13}
-    axis.text((I[0]-J[0])/2, (I[1]-J[1])/2, '$i$', color=gold, **text_params)
-    axis.text((J[0]-I[0])/2, (J[1]-I[1])/2, '$j$', color=lightblue, **text_params)
+    text_params = {'ha': 'center', 'va': 'center', 'size' : 6}
+    axis.text((I[0]-J[0])/2*1.1, (I[1]-J[1])/2*1.1, r'${}$'.format(I_label), color=gold, **text_params)
+    axis.text((J[0]-I[0])/2*1.1, (J[1]-I[1])/2*1.1, r'${}$'.format(J_label), color=lightblue, **text_params)
     if vector is not None:
-        axis.text(vector[0]*1.1, vector[1]*1.1, '$v$', color=red, **text_params)
+        axis.text(vector[0]*1.1, vector[1]*1.1, r'${}$'.format(vector_label), color=red, **text_params)
 
 def plot_basis(I, J, vector):
     """ Plot the vector on the basis defined by I and J
     """
-    figure, axis = pyplot.subplots(figsize=(4,4))
+    figsize = numpy.array([2,2]) * fig_scale
+    figure, axis = pyplot.subplots(figsize=figsize)
     plot_basis_helper(axis, I, J, vector=vector)
 
 def plot_change_basis(I, J, vector):
     """ Create a side-by-side plot of the vector both on the standard basis and on the new basis
     """
-    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=(8,4))
+    figsize = numpy.array([4,2]) * fig_scale
+    figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=figsize)
     M = numpy.transpose(numpy.vstack((I,J)))
     vector_ = inv(M) @ vector.reshape(-1, 1)
     plot_basis_helper(axis1, numpy.array([1,0]), numpy.array([0,1]), vector=vector, title='standard basis')
-    plot_basis_helper(axis2, I, J, vector=vector_, title='new basis')
+    plot_basis_helper(axis2, I, J, vector=vector_, title='new basis', I_label='a', J_label='b', vector_label='v')
 
 if __name__ == "__main__":
     pass
