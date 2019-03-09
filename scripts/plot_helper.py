@@ -77,7 +77,7 @@ def plot_vector(vectors, tails=None):
     axis.spines['right'].set_color('none')
     axis.spines['top'].set_color('none')
 
-def plot_transformation_helper(axis, matrix, *vectors, unit_circle=None, title=None):
+def plot_transformation_helper(axis, matrix, *vectors, unit_vector=True, unit_circle=None, title=None):
     """ Plot the linear transformation defined by matrix.
     axis: axis to plot on
     matrix: (2,2) ndarray
@@ -90,17 +90,18 @@ def plot_transformation_helper(axis, matrix, *vectors, unit_circle=None, title=N
     I = matrix[:,0]
     J = matrix[:,1]
     X = I[0]*X_ + J[0]*Y_
-    Y = I[1]*X_ + J[1]*Y_  
-    
+    Y = I[1]*X_ + J[1]*Y_
+    origin = numpy.zeros(1)
+        
     # draw grid lines
     for i in range(x.size):
         axis.plot(X[i,:], Y[i,:], c=gold, **grid_params)
         axis.plot(X[:,i], Y[:,i], c=lightblue, **grid_params)
     
     # draw (transformed) unit vectors
-    origin = numpy.zeros(1)
-    axis.quiver(origin, origin, [I[0]], [I[1]], color=green, **quiver_params)
-    axis.quiver(origin, origin, [J[0]], [J[1]], color=red, **quiver_params)
+    if unit_vector:
+        axis.quiver(origin, origin, [I[0]], [I[1]], color=green, **quiver_params)
+        axis.quiver(origin, origin, [J[0]], [J[1]], color=red, **quiver_params)
 
     # draw optional vectors
     color_cycle = cycle([pink, darkblue, orange, purple, brown])
@@ -130,15 +131,15 @@ def plot_transformation_helper(axis, matrix, *vectors, unit_circle=None, title=N
     if title is not None:
         axis.set_title(title)
 
-def plot_linear_transformation(matrix, *vectors, unit_circle=None):
+def plot_linear_transformation(matrix, *vectors, unit_vector=True, unit_circle=None):
     """ create line plot and quiver plot to visualize the linear transformation represented by the input matrix
     matrix: (2,2) ndarray
     vectors: optional vectors to plot
     """
     figsize = numpy.array([4,2]) * fig_scale
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=figsize)
-    plot_transformation_helper(axis1, numpy.identity(2), *vectors, unit_circle=unit_circle, title='Before transformation')
-    plot_transformation_helper(axis2, matrix, *vectors, unit_circle=unit_circle, title='After transformation')
+    plot_transformation_helper(axis1, numpy.identity(2), *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='Before transformation')
+    plot_transformation_helper(axis2, matrix, *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='After transformation')
 
 # def plot_linear_transformations(matrix1, matrix2, unit_circle=None):
 #     """ create line plot and quiver plot to visualize the linear transformations represented by the input matrices
@@ -151,7 +152,7 @@ def plot_linear_transformation(matrix, *vectors, unit_circle=None):
 #     plot_transformation_helper(axis2, matrix1, unit_circle=unit_circle, title='After 1 transformation')
 #     plot_transformation_helper(axis3, matrix2@matrix1, unit_circle=unit_circle, title='After 2 transformations')
 
-def plot_linear_transformations(*matrices, unit_circle=None):
+def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=None):
     """ create line plot and quiver plot to visualize the linear transformations represented by the input matrices
     matrices: (2,2) ndarray
     """
@@ -171,7 +172,7 @@ def plot_linear_transformations(*matrices, unit_circle=None):
                 title = 'After {} transformation'.format(i)
             else:
                 title = 'After {} transformations'.format(i)
-        plot_transformation_helper(axes[i//nx, i%nx], matrix_trans, unit_circle=unit_circle, title=title)
+        plot_transformation_helper(axes[i//nx, i%nx], matrix_trans, unit_vector=unit_vector, unit_circle=unit_circle, title=title)
         
 
 def plot_3d_linear_transformation(matrix):
