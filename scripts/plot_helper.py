@@ -174,44 +174,75 @@ def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=None):
                 title = 'After {} transformations'.format(i)
         plot_transformation_helper(axes[i//nx, i%nx], matrix_trans, unit_vector=unit_vector, unit_circle=unit_circle, title=title)
         
+def plot_3d_transformation_helper(axis, matrix, grid=True, unit_sphere=False, title=None):
+    assert matrix.shape == (3,3), "the input matrix must have a shape of (3,3)"
+    xcolor, ycolor, zcolor = '#0084b6', '#d8a322', '#FF3333'
+    linewidth = 0.7
+    if grid:
+        grid_range = 2
+        x = numpy.arange(-grid_range, grid_range+1)
+        X, Y, Z = numpy.meshgrid(x,x,x)
+        X_new = matrix[0,0]*X + matrix[0,1]*Y + matrix[0,2]*Z
+        Y_new = matrix[1,0]*X + matrix[1,1]*Y + matrix[1,2]*Z
+        Z_new = matrix[2,0]*X + matrix[2,1]*Y + matrix[2,2]*Z
+        for i in range(x.size):
+            for j in range(x.size):
+                axis.plot(X_new[:,i,j], Y_new[:,i,j], Z_new[:,i,j], color=xcolor, linewidth=linewidth)
+                axis.plot(X_new[i,:,j], Y_new[i,:,j], Z_new[i,:,j], color=ycolor, linewidth=linewidth)
+                axis.plot(X_new[i,j,:], Y_new[i,j,:], Z_new[i,j,:], color=zcolor, linewidth=linewidth)
+    
+    if unit_sphere:
+        u = numpy.linspace(0, 2 * numpy.pi, 100)
+        v = numpy.linspace(0, numpy.pi, 100)
+        X = 1 * numpy.outer(numpy.cos(u), numpy.sin(v))
+        Y = 1 * numpy.outer(numpy.sin(u), numpy.sin(v))
+        Z = 1 * numpy.outer(numpy.ones(numpy.size(u)), numpy.cos(v))
+        X_new = matrix[0,0]*X + matrix[0,1]*Y + matrix[0,2]*Z
+        Y_new = matrix[1,0]*X + matrix[1,1]*Y + matrix[1,2]*Z
+        Z_new = matrix[2,0]*X + matrix[2,1]*Y + matrix[2,2]*Z
+        axis.plot_surface(X_new, Y_new, Z_new, rstride=4, cstride=4, linewidth=0, cmap='ocean', alpha=0.6)
+
+    if title is not None:
+        axis.set_title(title)
+    
+    limit = 0
+    for array in (X_new, Y_new, Z_new):
+        limit_ = numpy.max(numpy.abs(array))
+        limit = max(limit, limit_)
+    axis.set_xlim(-limit, limit)
+    axis.set_ylim(-limit, limit)
+    axis.set_zlim(-limit, limit)
 
 def plot_3d_linear_transformation(matrix):
     """ create line plot to visualize the linear transformation represented by the input matrix
     matrix: (3,3) ndarray
     """
-    assert matrix.shape == (3,3), "the input matrix must have a shape of (3,3)"
-
-    grid_range = 2
-    x = numpy.arange(-grid_range, grid_range+1)
-    X, Y, Z = numpy.meshgrid(x,x,x)
-    X_new = matrix[0,0]*X + matrix[0,1]*Y + matrix[0,2]*Z
-    Y_new = matrix[1,0]*X + matrix[1,1]*Y + matrix[1,2]*Z
-    Z_new = matrix[2,0]*X + matrix[2,1]*Y + matrix[2,2]*Z
-
     figsize = numpy.array([4,2]) * fig_scale
     figure = pyplot.figure(figsize=figsize)
     axis1 = figure.add_subplot(1, 2, 1, projection='3d')
     axis2 = figure.add_subplot(1, 2, 2, projection='3d')
+    plot_3d_transformation_helper(axis1, numpy.identity(3), grid=True, unit_sphere=False, title='before transformation')
+    plot_3d_transformation_helper(axis2, matrix, grid=True, unit_sphere=False, title='after transformation')
 
-    # draw grid lines
-    xcolor, ycolor, zcolor = '#0084b6', '#d8a322', '#FF3333'
-    linewidth = 0.7
-    for i in range(x.size):
-        for j in range(x.size):
-            axis1.plot(X[:,i,j], Y[:,i,j], Z[:,i,j], color=xcolor, linewidth=linewidth)
-            axis1.plot(X[i,:,j], Y[i,:,j], Z[i,:,j], color=ycolor, linewidth=linewidth)
-            axis1.plot(X[i,j,:], Y[i,j,:], Z[i,j,:], color=zcolor, linewidth=linewidth)
-            axis2.plot(X_new[:,i,j], Y_new[:,i,j], Z_new[:,i,j], color=xcolor, linewidth=linewidth)
-            axis2.plot(X_new[i,:,j], Y_new[i,:,j], Z_new[i,:,j], color=ycolor, linewidth=linewidth)
-            axis2.plot(X_new[i,j,:], Y_new[i,j,:], Z_new[i,j,:], color=zcolor, linewidth=linewidth)
+def plot_3d_linear_transformations(*matrices, grid=False, unit_sphere=False):
+    nplots = len(matrices) + 1
+    nx = 2
+    ny = ceil(nplots/nx)
+    figsize = numpy.array([2*nx, 2*ny]) * fig_scale
+    figure = pyplot.figure(figsize=figsize)
 
-    # show x-y axis in the center, hide frames, set xlimit & ylimit
-    limit = 2 * 1.20
-    axis1.set_xlim([-limit, limit])
-    axis1.set_ylim([-limit, limit])
-    axis1.set_zlim([-limit, limit])
-    axis1.set_title('before transformation')
-    axis2.set_title('after transformation')
+    for i in range(nplots):  # fig_idx
+        axis = figure.add_subplot(nx, ny, i+1, projection='3d')
+        if i == 0:
+            matrix_trans = numpy.identity(3)
+            title = 'Before transformation'
+        else:
+            matrix_trans = matrices[i-1] @ matrix_trans
+            if i == 1:
+                title = 'After {} transformation'.format(i)
+            else:
+                title = 'After {} transformations'.format(i)
+        plot_3d_transformation_helper(axis, matrix_trans, grid=grid, unit_sphere=unit_sphere, title=title)
 
 def plot_basis_helper(axis, I, J, *vectors, title=None, I_label='i', J_label='j'):
     """ Plot the new coordinate system determined by the basis I,J.
