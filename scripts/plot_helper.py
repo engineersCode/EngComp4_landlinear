@@ -218,6 +218,9 @@ def plot_3d_transformation_helper(axis, matrix, grid=True, unit_sphere=False, ti
     axis.set_xlim(-limit, limit)
     axis.set_ylim(-limit, limit)
     axis.set_zlim(-limit, limit)
+    # adjust the whitespace between ticks and axes to get a tighter plot
+    for axis_str in ['x', 'y', 'z']:
+        axis.tick_params(axis=axis_str, pad=-3)
 
 def plot_3d_linear_transformation(matrix):
     """ create line plot to visualize the linear transformation represented by the input matrix
