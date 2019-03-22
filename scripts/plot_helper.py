@@ -173,6 +173,9 @@ def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=None):
             else:
                 title = 'After {} transformations'.format(i)
         plot_transformation_helper(axes[i//nx, i%nx], matrix_trans, unit_vector=unit_vector, unit_circle=unit_circle, title=title)
+    # hide axes of the extra subplot (only when nplots is an odd number)
+    if nx*ny > nplots:
+        axes[-1,-1].axis('off')
         
 def plot_3d_transformation_helper(axis, matrix, grid=True, unit_sphere=False, title=None):
     assert matrix.shape == (3,3), "the input matrix must have a shape of (3,3)"
