@@ -209,9 +209,12 @@ def plot_3d_transformation_helper(axis, matrix, grid=True, unit_sphere=False, ti
         axis.set_title(title)
     
     limit = 0
-    for array in (X_new, Y_new, Z_new):
-        limit_ = numpy.max(numpy.abs(array))
-        limit = max(limit, limit_)
+    if grid or unit_sphere:
+        for array in (X_new, Y_new, Z_new):
+            limit_ = numpy.max(numpy.abs(array))
+            limit = max(limit, limit_)
+    else:
+        limit = 1
     axis.set_xlim(-limit, limit)
     axis.set_ylim(-limit, limit)
     axis.set_zlim(-limit, limit)
@@ -229,13 +232,13 @@ def plot_3d_linear_transformation(matrix):
 
 def plot_3d_linear_transformations(*matrices, grid=False, unit_sphere=False):
     nplots = len(matrices) + 1
-    nx = 2
-    ny = ceil(nplots/nx)
+    nx = 2                 # number of figures per row
+    ny = ceil(nplots/nx)   # number of figures per column
     figsize = numpy.array([2*nx, 2*ny]) * fig_scale
     figure = pyplot.figure(figsize=figsize)
 
     for i in range(nplots):  # fig_idx
-        axis = figure.add_subplot(nx, ny, i+1, projection='3d')
+        axis = figure.add_subplot(ny, nx, i+1, projection='3d')
         if i == 0:
             matrix_trans = numpy.identity(3)
             title = 'Before transformation'
