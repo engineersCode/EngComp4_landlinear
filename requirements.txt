@@ -1,6 +1,6 @@
-ipython==6.1.0
-matplotlib==2.0.2
-numpy==1.15.1
+matplotlib>=2.0.2
+numpy>=1.15.1
+sympy
 jupyter
 imageio
 ipywidgets

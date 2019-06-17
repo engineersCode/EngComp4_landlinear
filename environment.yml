@@ -1,11 +1,12 @@
 name: landlinear
 channels:
-- defaults
-- conda-forge
+  - defaults
+  - conda-forge
 dependencies:
-- python>=3.5
-- matplotlib>=2.0.2
-- numpy>=1.13.1
-- jupyter
-- imageio
-- ipywidgets
+  - python>=3.5
+  - matplotlib>=2.0.2
+  - numpy>=1.15.1
+  - sympy
+  - jupyter
+  - imageio
+  - ipywidgets
