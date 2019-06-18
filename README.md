@@ -60,3 +60,10 @@ Install the packages using `requirements.txt` for `pip`:
 ```console
 pip install -r requirements.txt
 ```
+
+## Check Installation
+Run the script `check_install.py` to check whether the required packages are installed correctly:
+
+```console
+python check_install.py
+```
