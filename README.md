@@ -42,11 +42,13 @@ Use `environment.yml` to create a `conda` environment:
 conda env create -f environment.yml
 ```
 
-This creates a `conda` environment named "landlinear". Then activate this environment with
+This creates a `conda` environment named "landlinear". For `conda` 4.6 and later versions, activate this environment with
 
 ```console
 conda activate landlinear
 ```
+
+For `conda` version prior to 4.6, run `source activate landlinear` on Linux and MacOS, `activate landlinear` on Windows.
 
 #### Install with `conda`
 
