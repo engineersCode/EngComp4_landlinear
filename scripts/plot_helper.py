@@ -14,9 +14,9 @@ else:
     fontsize = 5
     fig_scale = 1
 
-pyplot.rc('font', family='serif', size=str(fontsize))
+pyplot.rc('font', family='serif', size=fontsize)
 pyplot.rc('figure', dpi=200)
-pyplot.rc('axes', axisbelow=True)
+pyplot.rc('axes', axisbelow=True, titlesize=5)
 
 grey = '#808080'
 gold = '#cab18c'   # x-axis grid
