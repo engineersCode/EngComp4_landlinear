@@ -1,7 +1,7 @@
 import numpy
 from numpy.linalg import inv, eig
 from math import ceil
-from matplotlib import pyplot
+from matplotlib import pyplot, ticker
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
 import plot_config
@@ -69,6 +69,16 @@ def plot_vector(vectors, tails=None):
     axis.set_xlim([-limit, limit])
     axis.set_ylim([-limit, limit])
     axis.set_aspect('equal')
+
+    # if xticks and yticks of grid do not match, choose the finer one
+    xticks = axis.get_xticks()
+    yticks = axis.get_yticks()
+    dx = xticks[1] - xticks[0]
+    dy = yticks[1] - yticks[0]
+    base = int(min(dx, dy))   # grid interval is always an integer
+    loc = ticker.MultipleLocator(base=base)
+    axis.xaxis.set_major_locator(loc)
+    axis.yaxis.set_major_locator(loc)
     axis.grid(True)
     
     # show x-y axis in the center, hide frames
