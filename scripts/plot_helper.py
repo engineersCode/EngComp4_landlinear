@@ -36,9 +36,28 @@ grid_params = {'linewidth': 0.5,
                'alpha': 0.8}
 
 def plot_vector(vectors, tails=None):
-    ''' draw 2d vectors based on the values of vectors and the position of theirs tails
-    vectors: list of 2-element tuples representing 2d vectors
-    tails: tail's coordinates of each vector
+    ''' Draw 2d vectors based on the values of the vectors and the position of their tails.
+    
+    Parameters
+    ----------
+    vectors : list.
+        List of 2-element array-like structures, each represents a 2d vector.
+    
+    tails : list, optional.
+        List of 2-element array-like structures, each represents the coordinates of the tail
+        of the corresponding vector in vectors. If None (default), all tails are set at the
+        origin (0,0). If len(tails) is 1, all tails are set at the same position. Otherwise,
+        vectors and tails must have the same length.
+    
+    Examples
+    --------
+    >>> v = [(1, 3), (3, 3), (4, 6)]
+    >>> plot_vector(v)      # draw 3 vectors with their tails at origin
+    >>> t = [numpy.array((2, 2))]
+    >>> plot_vector(v, t)   # draw 3 vectors with their tails at (2,2)
+    >>> t = [[3, 2], [-1, -2], [3, 5]]
+    >>> plot_vector(v, t)   # draw 3 vectors with 3 different tails
+
     '''   
     vectors = numpy.array(vectors)
     assert vectors.shape[1] == 2, "Each vector should have 2 elements."  
@@ -48,7 +67,7 @@ def plot_vector(vectors, tails=None):
     else:
         tails = numpy.zeros_like(vectors)
     
-    # tile vectors or tail array if needed
+    # tile vectors or tails array if needed
     nvectors = vectors.shape[0]
     ntails = tails.shape[0]
     if nvectors == 1 and ntails > 1:
