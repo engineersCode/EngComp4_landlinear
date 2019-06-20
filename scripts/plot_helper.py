@@ -80,7 +80,7 @@ def plot_vector(vectors, tails=None):
     loc = ticker.MultipleLocator(base=base)
     axis.xaxis.set_major_locator(loc)
     axis.yaxis.set_major_locator(loc)
-    axis.grid(True)
+    axis.grid(True, **grid_params)
     
     # show x-y axis in the center, hide frames
     axis.spines['left'].set_position('center')
