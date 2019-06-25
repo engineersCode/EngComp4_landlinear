@@ -95,7 +95,7 @@ def plot_vector(vectors, tails=None):
     yticks = axis.get_yticks()
     dx = xticks[1] - xticks[0]
     dy = yticks[1] - yticks[0]
-    base = int(min(dx, dy))   # grid interval is always an integer
+    base = max(int(min(dx, dy)), 1)   # grid interval is always an integer
     loc = ticker.MultipleLocator(base=base)
     axis.xaxis.set_major_locator(loc)
     axis.yaxis.set_major_locator(loc)
