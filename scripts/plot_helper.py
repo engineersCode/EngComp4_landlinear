@@ -107,11 +107,30 @@ def plot_vector(vectors, tails=None):
     axis.spines['right'].set_color('none')
     axis.spines['top'].set_color('none')
 
-def plot_transformation_helper(axis, matrix, *vectors, unit_vector=True, unit_circle=None, title=None):
-    """ Plot the linear transformation defined by matrix.
-    axis: axis to plot on
-    matrix: (2,2) ndarray
-    vectors: optional vectors to plot
+def plot_transformation_helper(axis, matrix, *vectors, unit_vector=True, unit_circle=False, title=None):
+    """ A helper function to plot the linear transformation defined by a 2x2 matrix.
+    
+    Parameters
+    ----------
+    axis : class matplotlib.axes.Axes.
+        The axes to plot on.
+
+    matrix : class numpy.ndarray.
+        The 2x2 matrix to visualize.
+
+    *vectors : class numpy.ndarray.
+        The vector(s) to plot along with the linear transformation. Each array denotes a vector
+        and must have a shape of (2,). Accept any number of vectors.
+    
+    unit_vector : bool, optional.
+        Whether to plot unit vectors of the standard basis, default to True.
+    
+    unit_circle: bool, optional.
+        Whether to plot unit circle, default to False.
+    
+    title: str, optional.
+        Title of the plot.
+
     """
     assert matrix.shape == (2,2), "the input matrix must have a shape of (2,2)"
     grid_range = 20
@@ -170,17 +189,6 @@ def plot_linear_transformation(matrix, *vectors, unit_vector=True, unit_circle=N
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=figsize)
     plot_transformation_helper(axis1, numpy.identity(2), *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='Before transformation')
     plot_transformation_helper(axis2, matrix, *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='After transformation')
-
-# def plot_linear_transformations(matrix1, matrix2, unit_circle=None):
-#     """ create line plot and quiver plot to visualize the linear transformations represented by the input matrices
-#     matrix1: (2,2) ndarray
-#     matrix2: (2,2) ndarray
-#     """
-#     figsize = numpy.array([6,2]) * fig_scale * 0.75   # 0.75 is the extra compensation for 3 subplots
-#     figure, (axis1, axis2, axis3) = pyplot.subplots(1, 3, figsize=figsize)
-#     plot_transformation_helper(axis1, numpy.identity(2), unit_circle=unit_circle, title='Before transformation')
-#     plot_transformation_helper(axis2, matrix1, unit_circle=unit_circle, title='After 1 transformation')
-#     plot_transformation_helper(axis3, matrix2@matrix1, unit_circle=unit_circle, title='After 2 transformations')
 
 def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=None):
     """ create line plot and quiver plot to visualize the linear transformations represented by the input matrices
