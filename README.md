@@ -8,7 +8,7 @@ Instead, we rely on visuals to elucidate the core concepts, and on computational
 #### [Lesson 1](https://go.gwu.edu/engcomp4lesson1): Transform all the vectors
 What is a vector? The physicist's view versus the computer scientist's view. Fundamental vector operations: visualizing vector addition and multiplication by a scalar. Intuitive presentation of basis vectors, linear combination and span. What is a matrix? A matrix as a linear transformation mapping a vector in one space, to another space. Visualizing linear transformations. Matrix-vector multiplication: a linear combination of the matrix columns. Some special transformations: rotation, shear, scaling. Matrix-matrix multiplication: a composition of two linear transformations. Idea of inverse of a matrix as a transformation that takes vectors back to where they came from.
 
-#### Lesson 2: The matrix is everywhere
+#### [Lesson 2](https://go.gwu.edu/engcomp4lesson2): The matrix is everywhere
 A matrix is a linear transformation… visualize it. Norm of a vector. 
 A matrix maps a circle to an ellipse… visualize it. A vector that doesn't change direction after a linear transformation is an eigenvector of the matrix. 
 A matrix is a system of equations… visualize it (row perspective). 
