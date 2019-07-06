@@ -17,7 +17,7 @@ A matrix is a change of basis… visualize it. An inverse of that matrix will ch
 Matrices in three-dimensional space: linear transformations in 3D; 3D systems of linear equations; dimension and rank.
 Visualize the transformations of rank-deficient matrices.
 
-#### Lesson 3:
+#### [Lesson 3](https://go.gwu.edu/engcomp4lesson3): Eigenvectors for the win
 
 Geometry of eigendecomposition. Eigenvectors revisited: a matrix transforms a circle to an ellipse, whose semimajor and semiminor axes align with the eigenvectors. 
 Composition of scaling transformation and a rotation transformation: not enough! Complete the composition. 
