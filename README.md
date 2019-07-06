@@ -28,7 +28,7 @@ Eigenvalues in ecology: matrix population models.
 Markov chains. 
 PageRank algorithm.
 
-#### Lesson 4:
+#### [Lesson 4](https://go.gwu.edu/engcomp4lesson4): Stick to the essentials: SVD
 Geometrical interpretation of singular value decomposition (SVD). While eigendecomposition is a combination of change of basis and stretching, SVD is a combination of rotation and stretching, which can be treated as a generalization of eigendecomposition.
 Example: SVD in image compression. A 2D image can be represented as an array where each pixel is an element of the array. By applying SVD and dropping smaller singular values, we can reconstruct the original image at a lower computational and memory cost.
 
