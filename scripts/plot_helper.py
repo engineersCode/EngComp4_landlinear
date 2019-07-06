@@ -119,8 +119,8 @@ def plot_transformation_helper(axis, matrix, *vectors, unit_vector=True, unit_ci
         The 2x2 matrix to visualize.
 
     *vectors : class numpy.ndarray.
-        The vector(s) to plot along with the linear transformation. Each array denotes a vector
-        and must have a shape of (2,). Accept any number of vectors.
+        The vector(s) to plot along with the linear transformation. Each array denotes a vector's
+        coordinates before the transformation and must have a shape of (2,). Accept any number of vectors. 
     
     unit_vector : bool, optional.
         Whether to plot unit vectors of the standard basis, default to True.
@@ -180,19 +180,48 @@ def plot_transformation_helper(axis, matrix, *vectors, unit_vector=True, unit_ci
     if title is not None:
         axis.set_title(title)
 
-def plot_linear_transformation(matrix, *vectors, unit_vector=True, unit_circle=None):
-    """ create line plot and quiver plot to visualize the linear transformation represented by the input matrix
-    matrix: (2,2) ndarray
-    vectors: optional vectors to plot
+def plot_linear_transformation(matrix, *vectors, unit_vector=True, unit_circle=False):
+    """ Plot the linear transformation defined by a 2x2 matrix using the helper
+    function plot_transformation_helper(). It will create 2 subplots to visualize some
+    vectors before and after the transformation.
+    
+    Parameters
+    ----------
+    matrix : class numpy.ndarray.
+        The 2x2 matrix to visualize.
+
+    *vectors : class numpy.ndarray.
+        The vector(s) to plot along with the linear transformation. Each array denotes a vector's
+        coordinates before the transformation and must have a shape of (2,). Accept any number of vectors.
+    
+    unit_vector : bool, optional.
+        Whether to plot unit vectors of the standard basis, default to True.
+    
+    unit_circle: bool, optional.
+        Whether to plot unit circle, default to False.
+    
     """
     figsize = numpy.array([4,2]) * fig_scale
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=figsize)
     plot_transformation_helper(axis1, numpy.identity(2), *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='Before transformation')
     plot_transformation_helper(axis2, matrix, *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='After transformation')
 
-def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=None):
-    """ create line plot and quiver plot to visualize the linear transformations represented by the input matrices
-    matrices: (2,2) ndarray
+def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=False):
+    """ Plot the linear transformation defined by a sequence of n 2x2 matrices using the helper
+    function plot_transformation_helper(). It will create n+1 subplots to visualize some
+    vectors before and after each transformation.
+
+    Parameters
+    ----------
+    *matrices : class numpy.ndarray.
+        The 2x2 matrices to visualize. Accept any number of matrices.
+    
+    unit_vector : bool, optional.
+        Whether to plot unit vectors of the standard basis, default to True.
+    
+    unit_circle: bool, optional.
+        Whether to plot unit circle, default to False.
+      
     """
     nplots = len(matrices) + 1
     nx = 2
@@ -216,6 +245,26 @@ def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=None):
         axes[-1,-1].axis('off')
         
 def plot_3d_transformation_helper(axis, matrix, grid=True, unit_sphere=False, title=None):
+    """ A helper function to plot the linear transformation defined by a 3x3 matrix.
+    
+    Parameters
+    ----------
+    axis : class matplotlib.axes.Axes.
+        The axes to plot on.
+
+    matrix : class numpy.ndarray.
+        The 3x3 matrix to visualize.
+
+    grid : bool, optional.
+        Whether to plot 3d grid lines, default to True.
+    
+    unit_sphere : bool, optional.
+        Whether to plot unit sphere, default to False.
+    
+    title : str, optional.
+        Title of the plot.
+
+    """
     assert matrix.shape == (3,3), "the input matrix must have a shape of (3,3)"
     xcolor, ycolor, zcolor = '#0084b6', '#d8a322', '#FF3333'
     linewidth = 0.7
@@ -260,18 +309,48 @@ def plot_3d_transformation_helper(axis, matrix, grid=True, unit_sphere=False, ti
     for axis_str in ['x', 'y', 'z']:
         axis.tick_params(axis=axis_str, pad=-3)
 
-def plot_3d_linear_transformation(matrix):
-    """ create line plot to visualize the linear transformation represented by the input matrix
-    matrix: (3,3) ndarray
+def plot_3d_linear_transformation(matrix, grid=True, unit_sphere=False):
+    """ Plot the linear transformation defined by a 3x3 matrix using the helper
+    function plot_3d_transformation_helper(). It will create 2 subplots to visualize some
+    vectors before and after the transformation.
+    
+    Parameters
+    ----------
+    matrix : class numpy.ndarray.
+        The 3x3 matrix to visualize.
+
+    grid : bool, optional.
+        Whether to plot 3d grid lines, default to True.
+    
+    unit_sphere : bool, optional.
+        Whether to plot unit sphere, default to False.
+
     """
+    
     figsize = numpy.array([4,2]) * fig_scale
     figure = pyplot.figure(figsize=figsize)
     axis1 = figure.add_subplot(1, 2, 1, projection='3d')
     axis2 = figure.add_subplot(1, 2, 2, projection='3d')
-    plot_3d_transformation_helper(axis1, numpy.identity(3), grid=True, unit_sphere=False, title='before transformation')
-    plot_3d_transformation_helper(axis2, matrix, grid=True, unit_sphere=False, title='after transformation')
+    plot_3d_transformation_helper(axis1, numpy.identity(3), grid=grid, unit_sphere=unit_sphere, title='before transformation')
+    plot_3d_transformation_helper(axis2, matrix, grid=grid, unit_sphere=unit_sphere, title='after transformation')
 
 def plot_3d_linear_transformations(*matrices, grid=False, unit_sphere=False):
+    """ Plot the linear transformation defined by a sequence of n 3x3 matrices using the helper
+    function plot_3d_transformation_helper(). It will create n+1 subplots to visualize some
+    vectors before and after each transformation.
+    
+    Parameters
+    ----------
+    *matrices : class numpy.ndarray.
+        The 3x3 matrices to visualize. Accept any number of matrices. 
+
+    grid : bool, optional.
+        Whether to plot 3d grid lines, default to False.
+    
+    unit_sphere : bool, optional.
+        Whether to plot unit sphere, default to False.
+
+    """
     nplots = len(matrices) + 1
     nx = 2                 # number of figures per row
     ny = ceil(nplots/nx)   # number of figures per column
@@ -292,10 +371,27 @@ def plot_3d_linear_transformations(*matrices, grid=False, unit_sphere=False):
         plot_3d_transformation_helper(axis, matrix_trans, grid=grid, unit_sphere=unit_sphere, title=title)
 
 def plot_basis_helper(axis, I, J, *vectors, title=None, I_label='i', J_label='j'):
-    """ Plot the new coordinate system determined by the basis I,J.
-    axis: 
-    I, J: (2, ) numpy array
-    vector: vector's coordinates on new basis
+    """ A helper function to plot the 2D coordinate system determined by the basis I,J.
+    
+    Parameters
+    ----------
+    axis : class matplotlib.axes.Axes.
+        The axes to plot on.
+
+    I, J: class numpy.ndarray.
+        The coordinates of the basis vector in the standard basis.
+
+    *vectors : class numpy.ndarray.
+        The vector(s) to plot along with the change of basis. Each array denotes a vector's
+        coordinates in I-J coordinate system (not in the standard basis). Each vector must have
+        a shape of (2,). Accept any number of vectors.
+    
+    I_label, J_label : str, optional.
+        Label of the new basis, default to 'i' and 'j'.
+    
+    title: str, optional.
+        Title of the plot.
+
     """
     grid_range = 20
     x = numpy.arange(-grid_range, grid_range+1)
@@ -345,14 +441,38 @@ def plot_basis_helper(axis, I, J, *vectors, title=None, I_label='i', J_label='j'
     axis.text((J[0]-I[0])/2*1.1, (J[1]-I[1])/2*1.1, r'${}$'.format(J_label), color=lightblue, **text_params)
 
 def plot_basis(I, J, *vectors):
-    """ Plot vectors on the basis defined by I and J
+    """ Plot 2d vectors on the coordinates system defined by basis I and J using the helper funtion
+    plot_basis_helper().
+    
+    Parameters
+    ----------
+    I, J: class numpy.ndarray.
+        The coordinates of the basis vector in the standard basis.
+
+    *vectors : class numpy.ndarray.
+        The vector(s) to plot along with the change of basis. Each array denotes a vector's
+        coordinates in I-J coordinate system (not in the standard basis). Each vector must have
+        a shape of (2,). Accept any number of vectors.
+
     """
     figsize = numpy.array([2,2]) * fig_scale
     figure, axis = pyplot.subplots(figsize=figsize)
     plot_basis_helper(axis, I, J, *vectors)
 
 def plot_change_basis(I, J, *vectors):
-    """ Create a side-by-side plot of the vector both on the standard basis and on the new basis
+    """ Create a side-by-side plot of some vectors both on the standard basis and on the new basis
+    defined by I and J, using the helper function plot_basis_helper().
+    
+    Parameters
+    ----------
+    I, J: class numpy.ndarray.
+        The coordinates of the basis vector in the standard basis.
+
+    *vectors : class numpy.ndarray.
+        The vector(s) to plot along with the change of basis. Each array denotes a vector's
+        coordinates in I-J coordinate system (not in the standard basis). Each vector must have
+        a shape of (2,). Accept any number of vectors.
+
     """
     figsize = numpy.array([4,2]) * fig_scale
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=figsize)
@@ -363,7 +483,14 @@ def plot_change_basis(I, J, *vectors):
     plot_basis_helper(axis2, I, J, *vectors_, title='new basis', I_label='a', J_label='b')
 
 def plot_eigen(matrix):
-    """ Visualize the eigendecomposition of the input matrix
+    """ Visualize the eigendecomposition of a 2x2 matrix as a combination of changing basis 
+    and scaling transformation, using the helper function plot_basis_helper().
+
+    Parameters
+    ----------
+    matrix : class numpy.ndarray.
+        The 2x2 matrix to visualize.
+
     """
     figsize = numpy.array([4,4]) * fig_scale
     figure, axes = pyplot.subplots(2, 2, figsize=figsize)
@@ -386,18 +513,6 @@ def plot_eigen(matrix):
         axis.plot(circle[0], circle[1], color=red, lw=0.8)
     for axis in axes[1]:
         axis.plot(circle_trans[0], circle_trans[1], color=red, lw=0.8)
-    # plot arrow-style circle
-    # alpha =  numpy.linspace(0, 2*numpy.pi, 16)
-    # scale = 2
-    # vectors = scale * numpy.vstack((numpy.cos(alpha), numpy.sin(alpha)))  # vectors coord in standard basis
-    # vectors_a = C_inv @ vectors  # vectors coord in new basis
-    # vectors_b = D @ vectors_a    # transformed vectors coord in new basis
-    # vectors_c = C @ vectors_b    # transformed vectors coord in standard basis
-
-    # plot_basis_helper(axes[0,0], numpy.array([1,0]), numpy.array([0,1]), *(vectors.T), title=r'coords in standard basis $\mathbf{x}$')
-    # plot_basis_helper(axes[0,1], C[:,0], C[:,1], *(vectors_a.T), title=r'change to new basis $C^{-1}\mathbf{x}$')
-    # plot_basis_helper(axes[1,0], C[:,0], C[:,1], *(vectors_b.T), title=r'scale along new basis $DC^{-1}\mathbf{x}$')
-    # plot_basis_helper(axes[1,1], numpy.array([1,0]), numpy.array([0,1]), *(vectors_c.T), title=r'change back to standard basis $CDC^{-1}\mathbf{x}$')
 
 if __name__ == "__main__":
     pass
