@@ -17,6 +17,7 @@ else:
 pyplot.rc('font', family='serif', size=fontsize)
 pyplot.rc('figure', dpi=200)
 pyplot.rc('axes', axisbelow=True, titlesize=5)
+pyplot.rc('lines', linewidth=1)
 
 grey = '#808080'
 gold = '#cab18c'   # x-axis grid
