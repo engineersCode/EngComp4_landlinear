@@ -4,15 +4,17 @@ from math import ceil
 from matplotlib import pyplot, ticker
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
-import plot_config
+#import plot_config
 
 # shrink figsize and fontsize when using %matplotlib notebook
-if plot_config.use_notebook:
-    fontsize = 4
-    fig_scale = 0.75
-else:
-    fontsize = 5
-    fig_scale = 1
+#if plot_config.use_notebook:
+#    fontsize = 4
+#    fig_scale = 0.75
+#else:
+#    fontsize = 5
+#    fig_scale = 1
+fontsize = 5
+fig_scale = 1
 
 pyplot.rc('font', family='serif', size=fontsize)
 pyplot.rc('figure', dpi=200)
