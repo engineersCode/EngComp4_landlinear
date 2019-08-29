@@ -1,25 +1,23 @@
 import numpy
 from numpy.linalg import inv, eig
 from math import ceil
-from matplotlib import pyplot, ticker
+from matplotlib import pyplot, ticker, get_backend, rc
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
-#import plot_config
+
+# interactive backends
+_int_backends = ['GTK3Agg', 'GTK3Cairo', 'MacOSX', 'nbAgg',
+                 'Qt4Agg', 'Qt4Cairo', 'Qt5Agg', 'Qt5Cairo',
+                 'TkAgg', 'TkCairo', 'WebAgg', 'WX', 'WXAgg', 'WXCairo']
+_backend = get_backend()   # get current backend name
 
 # shrink figsize and fontsize when using %matplotlib notebook
-#if plot_config.use_notebook:
-#    fontsize = 4
-#    fig_scale = 0.75
-#else:
-#    fontsize = 5
-#    fig_scale = 1
-fontsize = 5
-fig_scale = 1
-
-pyplot.rc('font', family='serif', size=fontsize)
-pyplot.rc('figure', dpi=200)
-pyplot.rc('axes', axisbelow=True, titlesize=5)
-pyplot.rc('lines', linewidth=1)
+if _backend in _int_backends:
+    fontsize = 4
+    fig_scale = 0.75
+else:
+    fontsize = 5
+    fig_scale = 1
 
 grey = '#808080'
 gold = '#cab18c'   # x-axis grid
@@ -38,6 +36,16 @@ quiver_params = {'angles': 'xy',
 grid_params = {'linewidth': 0.5,
                'alpha': 0.8}
 
+def set_rc(func):
+    def wrapper(*args, **kwargs):
+        rc('font', family='serif', size=fontsize)
+        rc('figure', dpi=200)
+        rc('axes', axisbelow=True, titlesize=5)
+        rc('lines', linewidth=1)
+        func(*args, **kwargs)
+    return wrapper
+
+@set_rc
 def plot_vector(vectors, tails=None):
     ''' Draw 2d vectors based on the values of the vectors and the position of their tails.
     
@@ -110,6 +118,7 @@ def plot_vector(vectors, tails=None):
     axis.spines['right'].set_color('none')
     axis.spines['top'].set_color('none')
 
+@set_rc
 def plot_transformation_helper(axis, matrix, *vectors, unit_vector=True, unit_circle=False, title=None):
     """ A helper function to plot the linear transformation defined by a 2x2 matrix.
     
@@ -183,6 +192,7 @@ def plot_transformation_helper(axis, matrix, *vectors, unit_vector=True, unit_ci
     if title is not None:
         axis.set_title(title)
 
+@set_rc
 def plot_linear_transformation(matrix, *vectors, unit_vector=True, unit_circle=False):
     """ Plot the linear transformation defined by a 2x2 matrix using the helper
     function plot_transformation_helper(). It will create 2 subplots to visualize some
@@ -209,6 +219,7 @@ def plot_linear_transformation(matrix, *vectors, unit_vector=True, unit_circle=F
     plot_transformation_helper(axis1, numpy.identity(2), *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='Before transformation')
     plot_transformation_helper(axis2, matrix, *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='After transformation')
 
+@set_rc
 def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=False):
     """ Plot the linear transformation defined by a sequence of n 2x2 matrices using the helper
     function plot_transformation_helper(). It will create n+1 subplots to visualize some
@@ -247,6 +258,7 @@ def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=False):
     if nx*ny > nplots:
         axes[-1,-1].axis('off')
         
+@set_rc
 def plot_3d_transformation_helper(axis, matrix, grid=True, unit_sphere=False, title=None):
     """ A helper function to plot the linear transformation defined by a 3x3 matrix.
     
@@ -312,6 +324,7 @@ def plot_3d_transformation_helper(axis, matrix, grid=True, unit_sphere=False, ti
     for axis_str in ['x', 'y', 'z']:
         axis.tick_params(axis=axis_str, pad=-3)
 
+@set_rc
 def plot_3d_linear_transformation(matrix, grid=True, unit_sphere=False):
     """ Plot the linear transformation defined by a 3x3 matrix using the helper
     function plot_3d_transformation_helper(). It will create 2 subplots to visualize some
@@ -337,6 +350,7 @@ def plot_3d_linear_transformation(matrix, grid=True, unit_sphere=False):
     plot_3d_transformation_helper(axis1, numpy.identity(3), grid=grid, unit_sphere=unit_sphere, title='before transformation')
     plot_3d_transformation_helper(axis2, matrix, grid=grid, unit_sphere=unit_sphere, title='after transformation')
 
+@set_rc
 def plot_3d_linear_transformations(*matrices, grid=False, unit_sphere=False):
     """ Plot the linear transformation defined by a sequence of n 3x3 matrices using the helper
     function plot_3d_transformation_helper(). It will create n+1 subplots to visualize some
@@ -373,6 +387,7 @@ def plot_3d_linear_transformations(*matrices, grid=False, unit_sphere=False):
                 title = 'After {} transformations'.format(i)
         plot_3d_transformation_helper(axis, matrix_trans, grid=grid, unit_sphere=unit_sphere, title=title)
 
+@set_rc
 def plot_basis_helper(axis, I, J, *vectors, title=None, I_label='i', J_label='j'):
     """ A helper function to plot the 2D coordinate system determined by the basis I,J.
     
@@ -443,6 +458,7 @@ def plot_basis_helper(axis, I, J, *vectors, title=None, I_label='i', J_label='j'
     axis.text((I[0]-J[0])/2*1.1, (I[1]-J[1])/2*1.1, r'${}$'.format(I_label), color=gold, **text_params)
     axis.text((J[0]-I[0])/2*1.1, (J[1]-I[1])/2*1.1, r'${}$'.format(J_label), color=lightblue, **text_params)
 
+@set_rc
 def plot_basis(I, J, *vectors):
     """ Plot 2d vectors on the coordinates system defined by basis I and J using the helper funtion
     plot_basis_helper().
@@ -462,6 +478,7 @@ def plot_basis(I, J, *vectors):
     figure, axis = pyplot.subplots(figsize=figsize)
     plot_basis_helper(axis, I, J, *vectors)
 
+@set_rc
 def plot_change_basis(I, J, *vectors):
     """ Create a side-by-side plot of some vectors both on the standard basis and on the new basis
     defined by I and J, using the helper function plot_basis_helper().
@@ -485,6 +502,7 @@ def plot_change_basis(I, J, *vectors):
     plot_basis_helper(axis1, numpy.array([1,0]), numpy.array([0,1]), *vectors, title='standard basis')
     plot_basis_helper(axis2, I, J, *vectors_, title='new basis', I_label='a', J_label='b')
 
+@set_rc
 def plot_eigen(matrix):
     """ Visualize the eigendecomposition of a 2x2 matrix as a combination of changing basis 
     and scaling transformation, using the helper function plot_basis_helper().
