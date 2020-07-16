@@ -4,6 +4,7 @@ from math import ceil
 from matplotlib import pyplot, ticker, get_backend, rc
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
+from functools import wraps
 
 # interactive backends
 _int_backends = ['GTK3Agg', 'GTK3Cairo', 'MacOSX', 'nbAgg',
@@ -37,6 +38,7 @@ grid_params = {'linewidth': 0.5,
                'alpha': 0.8}
 
 def set_rc(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         rc('font', family='serif', size=fontsize)
         rc('figure', dpi=200)
