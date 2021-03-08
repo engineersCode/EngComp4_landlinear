@@ -8,7 +8,7 @@ The course uses the Python programming language and the Jupyter open-source tool
 
 *Practical Linear Algebra with Python*
 
-*Pre-requisite: learning modules [*EngComp 1*](https://github.com/engineersCode/EngComp1_offtheground) of our collection.**
+**Pre-requisite: learning modules [*EngComp 1*](https://github.com/engineersCode/EngComp1_offtheground) of our collection.**
 
 This learning module re-imagines the teaching of linear algebra with a visually rich, intuitive approach, enabled by computing with Python.
 We disregard all the rules-based, memorization-heavy instruction of typical (undergraduate) courses in linear algebra.
