@@ -4,9 +4,9 @@
 It aims to develop computational skills for students in engineering, but it can also be used by students in other science majors. 
 The course uses the Python programming language and the Jupyter open-source tools for interactive computing.
 
-## Module 4: Land on Vector Spaces 
+## Module 4: Land on vector spaces 
 
-*Practical Linear Algebra with Python*
+*Practical Linear algebra with Python*
 
 **Pre-requisite: learning modules [*EngComp 1*](https://github.com/engineersCode/EngComp1_offtheground) of our collection.**
 
