@@ -1,5 +1,12 @@
-# "Land on Vector Spaces"
-## Practical Linear Algebra with Python
+# Engineering Computations Module 4
+
+*Engineering Computations* is a collection of stackable learning modules, flexible for adoption in different situations. 
+It aims to develop computational skills for students in engineering, but it can also be used by students in other science majors. 
+The course uses the Python programming language and the Jupyter open-source tools for interactive computing.
+
+## Module 4: Land on Vector Spaces 
+
+*Practical Linear Algebra with Python*
 
 This learning module re-imagines the teaching of linear algebra with a visually rich, intuitive approach, enabled by computing with Python.
 We disregard all the rules-based, memorization-heavy instruction of typical (undergraduate) courses in linear algebra.
