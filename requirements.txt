@@ -1,5 +1,6 @@
 matplotlib>=2.0.2
 numpy>=1.15.1
+pandas==0.20.3
 sympy
 jupyter
 imageio
