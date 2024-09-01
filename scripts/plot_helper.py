@@ -11,30 +11,13 @@ _int_backends = ['GTK3Agg', 'GTK3Cairo', 'MacOSX', 'nbAgg',
                  'TkAgg', 'TkCairo', 'WebAgg', 'WX', 'WXAgg', 'WXCairo']
 _backend = get_backend()   # get current backend name
 
-# Check for JupyterLab environment
-try:
-    from IPython import get_ipython
-    if 'ipykernel' in str(get_ipython()):
-        import os
-        if 'JPY_PARENT_PID' in os.environ:
-            _is_jupyterlab = True
-        else:
-            _is_jupyterlab = False
-    else:
-        _is_jupyterlab = False
-except:
-    _is_jupyterlab = False
-
-# Set appropriate backend for JupyterLab
-if _is_jupyterlab:
-    import matplotlib
-    matplotlib.use('module://ipykernel.pylab.backend_inline')
-
-
 # shrink figsize and fontsize when using %matplotlib notebook
 if _backend in _int_backends:
     fontsize = 4
-    fig_scale = 0.75
+    fig_scale = 0.7
+elif _backend == 'module://ipympl.backend_nbagg':
+    fontsize = 4
+    fig_scale = 0.7
 else:
     fontsize = 5
     fig_scale = 1
