@@ -8,16 +8,14 @@ from itertools import cycle
 # interactive backends
 _int_backends = ['GTK3Agg', 'GTK3Cairo', 'MacOSX', 'nbAgg',
                  'Qt4Agg', 'Qt4Cairo', 'Qt5Agg', 'Qt5Cairo',
-                 'TkAgg', 'TkCairo', 'WebAgg', 'WX', 'WXAgg', 'WXCairo']
+                 'TkAgg', 'TkCairo', 'WebAgg', 'WX', 'WXAgg', 'WXCairo',
+                'module://ipympl.backend_nbagg']
 _backend = get_backend()   # get current backend name
 
 # shrink figsize and fontsize when using %matplotlib notebook
 if _backend in _int_backends:
     fontsize = 4
-    fig_scale = 0.7
-elif _backend == 'module://ipympl.backend_nbagg':
-    fontsize = 4
-    fig_scale = 0.7
+    fig_scale = 0.75
 else:
     fontsize = 5
     fig_scale = 1
