@@ -3,6 +3,7 @@ from numpy.linalg import inv, eig
 from math import ceil
 from matplotlib import pyplot, ticker, get_backend, rc
 from itertools import cycle
+from functools import wraps
 
 # interactive backends
 INTERACTIVE_BACKENDS = ['GTK3Agg', 'GTK3Cairo', 'MacOSX', 'nbAgg',
@@ -32,6 +33,7 @@ grid_params = {'linewidth': 0.5,
                'alpha': 0.8}
 
 def set_rc(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         fontsize = 4 if get_backend() in INTERACTIVE_BACKENDS else 5
         rc('font', family='serif', size=fontsize)
