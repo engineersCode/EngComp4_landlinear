@@ -113,7 +113,7 @@ def plot_vector(vectors, tails=None):
     axis.spines['bottom'].set_position('center')
     axis.spines['right'].set_color('none')
     axis.spines['top'].set_color('none')
-    pyplot.show()
+
 
 @set_rc
 def plot_transformation_helper(axis, matrix, *vectors, unit_vector=True, unit_circle=False, title=None):
@@ -215,7 +215,7 @@ def plot_linear_transformation(matrix, *vectors, unit_vector=True, unit_circle=F
     figure, (axis1, axis2) = pyplot.subplots(1, 2, figsize=figsize)
     plot_transformation_helper(axis1, numpy.identity(2), *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='Before transformation')
     plot_transformation_helper(axis2, matrix, *vectors, unit_vector=unit_vector, unit_circle=unit_circle, title='After transformation')
-    pyplot.show()
+
 
 @set_rc
 def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=False):
@@ -256,7 +256,7 @@ def plot_linear_transformations(*matrices, unit_vector=True, unit_circle=False):
     if nx*ny > nplots:
         axes[-1,-1].axis('off')
 
-    pyplot.show()
+
 
 @set_rc
 def plot_3d_transformation_helper(axis, matrix, grid=True, unit_sphere=False, title=None):
@@ -349,7 +349,7 @@ def plot_3d_linear_transformation(matrix, grid=True, unit_sphere=False):
     axis2 = figure.add_subplot(1, 2, 2, projection='3d')
     plot_3d_transformation_helper(axis1, numpy.identity(3), grid=grid, unit_sphere=unit_sphere, title='before transformation')
     plot_3d_transformation_helper(axis2, matrix, grid=grid, unit_sphere=unit_sphere, title='after transformation')
-    pyplot.show()
+
 
 @set_rc
 def plot_3d_linear_transformations(*matrices, grid=False, unit_sphere=False):
@@ -387,7 +387,7 @@ def plot_3d_linear_transformations(*matrices, grid=False, unit_sphere=False):
             else:
                 title = 'After {} transformations'.format(i)
         plot_3d_transformation_helper(axis, matrix_trans, grid=grid, unit_sphere=unit_sphere, title=title)
-        pyplot.show()
+
 
 @set_rc
 def plot_basis_helper(axis, I, J, *vectors, title=None, I_label='i', J_label='j'):
@@ -479,7 +479,7 @@ def plot_basis(I, J, *vectors):
     figsize = numpy.array([2,2]) * get_figure_scale()
     figure, axis = pyplot.subplots(figsize=figsize)
     plot_basis_helper(axis, I, J, *vectors)
-    pyplot.show()
+
 
 @set_rc
 def plot_change_basis(I, J, *vectors):
@@ -504,7 +504,7 @@ def plot_change_basis(I, J, *vectors):
     vectors_ = [ M_inv @ vector.reshape(-1, 1) for vector in vectors ]
     plot_basis_helper(axis1, numpy.array([1,0]), numpy.array([0,1]), *vectors, title='standard basis')
     plot_basis_helper(axis2, I, J, *vectors_, title='new basis', I_label='a', J_label='b')
-    pyplot.show()
+
 
 @set_rc
 def plot_eigen(matrix):
@@ -539,7 +539,7 @@ def plot_eigen(matrix):
     for axis in axes[1]:
         axis.plot(circle_trans[0], circle_trans[1], color=red, lw=0.8)
 
-    pyplot.show()
+
 
 if __name__ == "__main__":
     pass
